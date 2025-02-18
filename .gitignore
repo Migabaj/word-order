@@ -3,6 +3,9 @@ __pycache__/
 *.py[cod]
 *$py.class
 
+# DS_store
+.DS_store
+
 # C extensions
 *.so
 
@@ -131,6 +134,7 @@ celerybeat.pid
 .env
 .venv
 env/
+envs/
 venv/
 ENV/
 env.bak/
@@ -167,5 +171,23 @@ cython_debug/
 #  option (not recommended) you can uncomment the following to ignore the entire idea folder.
 #.idea/
 
+# VSCode config
+.vscode
+
 # PyPI configuration file
 .pypirc
+
+# API keys
+dataset_generation/sketchengine_api.txt
+
+# temporary files
+**/temp_*
+
+# readings
+readings/
+
+# toy datasets
+**/toy_*
+
+# docs html
+docs/html
