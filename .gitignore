@@ -1,6 +1,5 @@
 # Condor files
-submit.sub
-entrypoint.sh
+.condor/
 Dockerfile
 
 # Byte-compiled / optimized / DLL files
@@ -145,6 +144,7 @@ ENV/
 env.bak/
 venv.bak/
 
+
 # Spyder project settings
 .spyderproject
 .spyproject
@@ -193,9 +193,7 @@ temp_*
 readings/
 
 # datasets
-data/
-
-# toy datasets
+data/**
 **/toy_*
 
 # docs html
