@@ -1,3 +1,8 @@
+# Condor files
+submit.sub
+entrypoint.sh
+Dockerfile
+
 # Byte-compiled / optimized / DLL files
 __pycache__/
 *.py[cod]
@@ -181,10 +186,14 @@ cython_debug/
 dataset_generation/sketchengine_api.txt
 
 # temporary files
+temp_*
 **/temp_*
 
 # readings
 readings/
+
+# datasets
+data/
 
 # toy datasets
 **/toy_*
