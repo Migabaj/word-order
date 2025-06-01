@@ -7,26 +7,11 @@ import circuitsvis as cv
 import matplotlib.pyplot as plt
 from transformers import AutoModelForCausalLM, AutoTokenizer
 from bs4 import BeautifulSoup
-
 from typing import Optional
-
-# import transformer_lens.utils as utils
-# from transformer_lens.hook_points import (
-#     HookPoint,
-# )  # Hooking utilities
-# from transformer_lens import HookedTransformer, FactoredMatrix
 
 from modeling.wrapper import load_gptj, GPTJWrapper
 
 PROMPT_PREFIX = "Q: Translate this phrase from English to German:" # TODO: more universal
-
-# dataset = pd.read_csv(DATASET_PATH)
-# model = HookedTransformer.from_pretrained(
-#     "EleutherAI/gpt-j-6B", cache_dir=CACHE_DIR, device=DEVICE
-# )
-# tokenizer = AutoTokenizer.from_pretrained("EleutherAI/gpt-j-6B", cache_dir=CACHE_DIR)
-# model, tokenizer = load_gptj(cache_dir=CACHE_DIR)
-# print(model)
 
 def get_args():
     """Create an argument parser and return the user input"""
@@ -59,6 +44,7 @@ def get_wrapper(model_name : str, cache_dir : Optional[str], device : str) -> GP
     wrapper = GPTJWrapper(model, tokenizer) # TODO: for different models!!
     return wrapper
 
+# TODO: figure out all this
 def get_attentions(row : pd.Series, offset : int) -> torch.Tensor:
     """Extracts attention grid from prompt with cutoff.
     """

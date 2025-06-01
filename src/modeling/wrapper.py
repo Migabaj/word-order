@@ -76,15 +76,6 @@ def load_gptj(
     ).to(device)
     return model, tokenizer
 
-
-# class LambdaLayer(nn.Module):
-#     def __init__(self, lambd):
-#         super(LambdaLayer, self).__init__()
-#         self.lambd = lambd
-#     def forward(self, x):
-#         return self.lambd(x)
-
-
 class ModelWrapper(nn.Module):
     """Wrapper for analyzing LLMs' activations
 
@@ -98,6 +89,7 @@ class ModelWrapper(nn.Module):
         self.model = model.eval()
         self.model.activations_ = {}
         self.tokenizer = tokenizer
+        self.vocab_size = tokenizer.vocab_size
         self.device = get_device()
         self.num_layers = len(self.model.transformer.h)
         self.hooks = []
@@ -195,8 +187,18 @@ class ModelWrapper(nn.Module):
             answer_probs.append(answer_prob)
         # is_top_at_end = sorted_probs[0] == answer_id
         return np.array(answer_probs)
+    
+    def get_probs_per_layer(
+        self, logits, dtype=torch.float16, take_first_layer: bool = True
+    ):
+        if not take_first_layer:
+            logits = logits[1:]
+        layer_probs = torch.zeros(logits.shape[0], logits.shape[1], dtype=dtype)
+        for i, layer in enumerate(logits):
+            layer_probs[i] = F.softmax(layer, dim=-1)
+        return layer_probs
 
-    def get_top_ids_per_layer(
+    def _get_top_ids_per_layer(
         self, logits: List[torch.Tensor], k: int = 10
     ) -> torch.Tensor:
         layer_tokens = torch.zeros(logits.shape[0], k, dtype=torch.int64)
@@ -217,31 +219,6 @@ class ModelWrapper(nn.Module):
             )}\n"""
         print(result_output)
         return result_output
-
-    def print_top_concise(self, logits):
-        layer_tokens = []
-        layer_aggr = {}
-        for i, layer in enumerate(logits):
-            # TODO: add k!=1
-            top_token = self.tokenizer.convert_ids_to_tokens(
-                F.softmax(layer, dim=-1).argsort(descending=True)[:1]
-            )
-            layer_tokens.append(top_token)
-        layer_repr = ""
-        span_start = -1
-        for i, token_list in enumerate(layer_tokens):
-            token = token_list[0]
-            if token != layer_repr:
-                layer_aggr[(span_start, i - 1)] = layer_repr
-                layer_repr = token
-                span_start = i
-        layer_aggr[(span_start, len(layer_tokens) - 1)] = layer_repr
-        for span, token in sorted(layer_aggr.items()):
-            if span[0] == span[1]:
-                result_output += f"{span[0]}\t{token}" + "\n"
-            else:
-                result_output += f"{span[0]}-{span[1]}\t{token}" + "\n"
-        print(result_output)
 
     def print_tops_with_offset(
         self,

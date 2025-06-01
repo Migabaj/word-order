@@ -3,8 +3,9 @@ import requests
 import pandas as pd
 from bs4 import BeautifulSoup
 
-USERNAME = "miso00001"
-API_KEY = "424ad10e0113b3f3e517949e82c787dd"
+# insert your username and API key
+USERNAME = ""
+API_KEY = ""
 BASE_URL = "https://api.sketchengine.eu/bonito/run.cgi"
 
 nouns = [
