@@ -2,7 +2,7 @@
 of LLMs."""
 
 from typing import Union, Optional, List, Tuple #, TypedDict
-from transformers import AutoModelForCausalLM, AutoTokenizer
+from transformers import AutoModelForCausalLM, AutoTokenizer, LlamaForCausalLM
 # from transformers import BloomTokenizerFast
 import torch
 import torch.nn.functional as F
@@ -76,6 +76,19 @@ def load_gptj(
     ).to(device)
     return model, tokenizer
 
+def load_llama(
+    cache_dir: Optional[str] = None
+) -> Tuple[LlamaForCausalLM, AutoTokenizer]:
+    device = get_device()
+    tokenizer = AutoTokenizer.from_pretrained(
+        "meta-llama/Meta-Llama-3-8B", cache_dir=cache_dir
+    )
+    model = LlamaForCausalLM.from_pretrained(
+        "meta-llama/Meta-Llama-3-8B",
+        cache_dir=cache_dir,
+    ).to(device)
+    return model, tokenizer
+
 class ModelWrapper(nn.Module):
     """Wrapper for analyzing LLMs' activations
 
@@ -91,7 +104,6 @@ class ModelWrapper(nn.Module):
         self.tokenizer = tokenizer
         self.vocab_size = tokenizer.vocab_size
         self.device = get_device()
-        self.num_layers = len(self.model.transformer.h)
         self.hooks = []
         self.layer_pasts = {}
 
@@ -220,48 +232,6 @@ class ModelWrapper(nn.Module):
         print(result_output)
         return result_output
 
-    def print_tops_with_offset(
-        self,
-        text: str,
-        translated: str = "",
-        offset: Optional[int] = None,
-        concise: bool = False,
-        markdown: bool = False,
-        k: int = 3,
-    ):
-        assert offset is None or offset < 0
-
-        result_output = ""
-        inp_ids = self.tokenize(text)
-        if markdown:
-            result_output += f"# {translated}\n"
-
-        for token_spot in range(offset, 1):
-            if token_spot == 0:
-                offset_i = None
-            else:
-                offset_i = token_spot
-
-            inp_ids_segment = inp_ids[:, :offset_i]
-            logits = self.get_layers(inp_ids_segment)
-            if markdown:
-                head = self.tokenizer.decode(inp_ids_segment[0]).split("\n")[-1]
-                header = f"## {head}"
-            else:
-                header = f"TEXT: {self.tokenizer.decode(inp_ids_segment[0])}"
-            result_output += header + "\n"  # TODO: zero
-            if markdown:
-                result_output += "```"
-            # print(self.tokenizer.decode(""))
-            if concise:
-                result_output += self.print_top_concise(logits[1:])
-            else:
-                result_output += self.print_top(logits[1:], k=k)
-            if markdown:
-                result_output += "```"
-            result_output += "\n"
-        return result_output
-
     def topk_per_layer(self, logits, k=10):
         topk = []
         for i, layer in enumerate(logits):
@@ -325,8 +295,43 @@ class ModelWrapper(nn.Module):
         self.model.activations_ = {}
 
 
+class LLamaWrapper(ModelWrapper):
+    """Wrapper for the LLaMA model."""
+    def __init__(self, model: AutoModelForCausalLM, tokenizer: AutoTokenizer):
+        super().__init__(model, tokenizer)
+        # For LLaMA, the transformer layers are in model.model.layers
+        self.num_layers = len(self.model.model.layers)
+
+    def layer_decode(self, hidden_states: torch.Tensor) -> List[torch.Tensor]:
+        """Project hidden states onto the vocab.
+
+        :param hidden_states: Model's hidden states of shape
+            \ :math:`(N_L, b, d_v, d_h)`\, where
+
+                - \ :math:`N_L`\: number of layers
+                - \ :math:`b`\: batch size
+                - \ :math:`d_v`\: vocab size
+                - \ :math:`d_h`\: dimensionality of hidden states
+        :return: List of logits, i.e. model's hidden states projected onto its vocabulary.
+            Each list element is a one-dimensional tensor of length \ :math:`d_v`\
+        """
+        logits = []
+        for i, h in enumerate(hidden_states):
+            h = h[:, -1, :]  # (batch, num tokens, embedding size) take the last token
+            if i == len(hidden_states) - 1:
+                normed = h  # ln_f would already have been applied
+            else:
+                normed = self.model.model.norm(h)
+            l = torch.matmul(self.model.lm_head.weight, normed.T)
+            logits.append(l)
+        return logits
+
+
 class GPTWrapper(ModelWrapper):
     """Wrapper for the GPT-J model."""
+    def __init__(self, model: AutoModelForCausalLM, tokenizer: AutoTokenizer):
+        super().__init__(model, tokenizer)
+        self.num_layers = len(self.model.transformer.h)
 
     def layer_decode(self, hidden_states: torch.Tensor) -> List[torch.Tensor]:
         """Project hidden states onto the vocab.
