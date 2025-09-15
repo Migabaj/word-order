@@ -9,6 +9,8 @@ import torch.nn.functional as F
 from torch import nn
 import numpy as np
 
+# TODO: mBART wrapper
+
 def get_device() -> str:
     """Get current available device.
 
@@ -44,7 +46,7 @@ def load_mgpt(
     )
     model = AutoModelForCausalLM.from_pretrained(
         "sberbank-ai/mGPT",
-        torch_dtype=torch.float16,
+        torch_dtype=torch.float32,
         cache_dir=cache_dir
     ).to(device)
     return model, tokenizer
@@ -83,8 +85,36 @@ def load_llama(
     tokenizer = AutoTokenizer.from_pretrained(
         "meta-llama/Meta-Llama-3-8B", cache_dir=cache_dir
     )
-    model = LlamaForCausalLM.from_pretrained(
+    model = AutoModelForCausalLM.from_pretrained(
         "meta-llama/Meta-Llama-3-8B",
+        cache_dir=cache_dir,
+    ).to(device)
+    return model, tokenizer
+
+def load_gptneo(
+    cache_dir: Optional[str] = None
+):
+    device = get_device()
+    tokenizer = AutoTokenizer.from_pretrained(
+        "EleutherAI/gpt-neo-2.7B", cache_dir=cache_dir
+    )
+    model = AutoModelForCausalLM.from_pretrained(
+        "EleutherAI/gpt-neo-2.7B",
+        torch_dtype=torch.float32,
+        cache_dir=cache_dir,
+    ).to(device)
+    return model, tokenizer
+
+def load_eurollm(
+    cache_dir: Optional[str] = None
+):
+    device = get_device()
+    tokenizer = AutoTokenizer.from_pretrained(
+        "utter-project/EuroLLM-9B", cache_dir=cache_dir
+    )
+    model = AutoModelForCausalLM.from_pretrained(
+        "utter-project/EuroLLM-9B",
+        torch_dtype=torch.float32,
         cache_dir=cache_dir,
     ).to(device)
     return model, tokenizer
@@ -106,6 +136,7 @@ class ModelWrapper(nn.Module):
         self.device = get_device()
         self.hooks = []
         self.layer_pasts = {}
+        self.hidden_size = self.model.config.hidden_size
 
     def tokenize(
         self, s: str, output_string: bool = False
@@ -139,6 +170,17 @@ class ModelWrapper(nn.Module):
             the `layer_decode` has to be implemented for each given wrapper class
         """
         raise NotImplementedError("Layer decode has to be implemented!")
+
+    def get_logits(self, tokens: List[int], **model_kwargs) -> torch.Tensor:
+        """Get logits for the given tokens
+
+        :param tokens: List of token ids
+        :param model_kwargs: Possible keyword arguments for the model's forward call
+        :return: Logits for the given tokens
+        """
+        outputs = self.model(input_ids=tokens, output_hidden_states=True, **model_kwargs)
+        hidden_states, true_logits = outputs.hidden_states, outputs.logits
+        return hidden_states
 
     def get_layers(self, tokens: List[int], **model_kwargs) -> torch.Tensor:
         """Decode hidden states and return a tensor of the resulting projections.
@@ -203,12 +245,13 @@ class ModelWrapper(nn.Module):
     def get_probs_per_layer(
         self, logits, dtype=torch.float16, take_first_layer: bool = True
     ):
-        if not take_first_layer:
-            logits = logits[1:]
-        layer_probs = torch.zeros(logits.shape[0], logits.shape[1], dtype=dtype)
-        for i, layer in enumerate(logits):
-            layer_probs[i] = F.softmax(layer, dim=-1)
-        return layer_probs
+        with torch.no_grad():
+            if not take_first_layer:
+                logits = logits[1:]
+            layer_probs = torch.zeros(logits.shape[0], logits.shape[1], dtype=dtype)
+            for i, layer in enumerate(logits):
+                layer_probs[i] = F.softmax(layer, dim=-1)
+            return layer_probs
 
     def _get_top_ids_per_layer(
         self, logits: List[torch.Tensor], k: int = 10
@@ -293,6 +336,16 @@ class ModelWrapper(nn.Module):
     def reset_activations(self):
         """Reset wrapper's activations to none"""
         self.model.activations_ = {}
+    
+    @staticmethod
+    def entropy(layer):
+        """Calculate entropy for a given 1-dimensional tensor (probability distribution).
+
+        :param layer: A 1-dimensional tensor representing a probability distribution
+        :return: Entropy value
+        """
+        with torch.no_grad():
+            return -torch.sum(layer * torch.log(layer + 1e-9))
 
 
 class LLamaWrapper(ModelWrapper):
@@ -326,6 +379,34 @@ class LLamaWrapper(ModelWrapper):
             logits.append(l)
         return logits
 
+class EuroLLMWrapper(ModelWrapper):
+    def __init__(self, model: AutoModelForCausalLM, tokenizer: AutoTokenizer):
+        super().__init__(model, tokenizer)
+        self.num_layers = len(self.model.model.layers)
+    def layer_decode(self, hidden_states: torch.Tensor) -> List[torch.Tensor]:
+        """Project hidden states onto the vocab.
+        :param hidden_states: Model's hidden states of shape
+            \ :math:`(N_L, b, d_v, d_h)`\, where
+                - \ :math:`N_L`\: number of layers
+                - \ :math:`b`\: batch size
+                - \ :math:`d_v`\: vocab size
+                - \ :math:`d_h`\: dimensionality of hidden states
+        :return: List of logits, i.e. model's hidden states projected onto its vocabulary.
+            Each list element is a one-dimensional tensor of length \ :math:`d_v`\
+        """
+        logits = []
+        for i, h in enumerate(hidden_states):
+            h = h[:, -1, :]  # (batch, num tokens, embedding size) take the last token
+            if i == len(hidden_states) - 1:
+                normed = h  # ln_f would already have been applied
+            else:
+                # print("Layer hidden:", h)
+                # print("Layer hidden:", h.shape)
+                normed = self.model.model.norm(h)
+            l = torch.matmul(self.model.lm_head.weight, normed.T)
+            logits.append(l)
+        return logits
+
 
 class GPTWrapper(ModelWrapper):
     """Wrapper for the GPT-J model."""
@@ -352,6 +433,8 @@ class GPTWrapper(ModelWrapper):
             if i == len(hidden_states) - 1:
                 normed = h  # ln_f would already have been applied
             else:
+                # print("Layer hidden:", h)
+                # print("Layer hidden:", h.shape)
                 normed = self.model.transformer.ln_f(h)
             l = torch.matmul(self.model.lm_head.weight, normed.T)
             logits.append(l)

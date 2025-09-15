@@ -1,3 +1,6 @@
+"""Computes projected probabilities for all layers of a given autoregressive model
+and writes them to a .pt file."""
+
 import os
 import re
 import json
@@ -8,8 +11,8 @@ from tqdm import tqdm
 from typing import Dict
 import matplotlib.pyplot as plt
 
-from modeling.wrapper import load_gptj, load_mgpt, ModelWrapper, GPTWrapper, GPTJWrapper
-from model_args import parse_model_args, modelname2setting, ParseArg
+from modeling.wrapper import load_gptj, load_mgpt, load_llama, ModelWrapper, GPTWrapper, GPTJWrapper, LLamaWrapper
+from utils.model_args import parse_model_args, modelname2setting, ParseArg
 
 def generate_prompt(row : pd.Series, prompt_format : str, col_e : str, col_f : str) -> str:
     """Generate the prompt for the model
@@ -38,35 +41,36 @@ def get_probability_matrix(wrapper: ModelWrapper, inp_ids, take_first_layer=Fals
 
 def main():
     args = parse_model_args(
-        ParseArg("data", argtype=str, help="Path to the dataset containing sentences"),
-        ParseArg("--prompt-format", argtype=str, default="Q: Translate this phrase from English to German: {sentence_e} A: {sentence_f}", help="Format for prompt"),
-        ParseArg("--column-e", argtype=str, default="sentence_e", help="Column with English sentences"),
-        ParseArg("--columns-f", argtype=str, nargs="+", help="Columns with sentences to have as the prompt"),
-        ParseArg("--torch-save",  argtype=str, help="Directory to save the probabilities")
+        ParseArg("data", type=str, help="Path to the dataset containing sentences"),
+        ParseArg("--prompt-col", type=str, help="Column with prompt"),
+        ParseArg("--torch-save",  type=str, help="Directory to save the probabilities")
     )
 
     model_func, wrapper_class = modelname2setting[args.model]
     model, tokenizer = model_func(args.cache)
     wrapper = wrapper_class(model, tokenizer)
-    dataset = pd.read_csv(args.data, index_col=0)
+    dataset = pd.read_csv(args.data)
+    dataset = dataset.fillna("")
 
-    for column_f in args.columns_f:
-        save_path = os.path.join(args.torch_save, f"probs_{column_f}.pt")
-        prob_matrix = torch.zeros(len(dataset), wrapper.num_layers, len(wrapper.tokenizer), dtype=torch.float16)
+    # prompt_format = args.prompt_format.replace('\\n', '\n')
+    save_path = args.torch_save
+    logits_matrix = torch.zeros(len(dataset), wrapper.num_layers, wrapper.hidden_size)
 
-        for i, (row_index, row) in tqdm(enumerate(list(dataset.iterrows()))):
-            prompt = generate_prompt(
-                row, args.prompt_format, args.column_e, column_f
-            )
-            with torch.no_grad():
-                probs = get_probability_matrix(wrapper, wrapper.tokenize(prompt), take_first_layer=False)
-                probs_cpu = probs.cpu()  # Move tensor to CPU to free GPU memory
-                del probs
-                torch.cuda.empty_cache()  # Clear CUDA cache to free memory
-            prob_matrix[i] = probs_cpu
-            del probs_cpu
-            torch.cuda.empty_cache()
-        torch.save(prob_matrix.cpu(), save_path)
+    for i, (row_index, row) in tqdm(enumerate(list(dataset.iterrows()))):
+        prompt = row[args.prompt_col].strip()
+        # TODO: remove this
+        if i == 0:
+            print(prompt)
+        with torch.no_grad():
+            logits = wrapper.get_logits(wrapper.tokenize(prompt))
+            logits = torch.stack(logits, dim=0).squeeze()  # Stack logits to create a tensor
+            logits_cpu = logits.cpu()  # Move tensor to CPU to free GPU memory
+            del logits
+            torch.cuda.empty_cache()  # Clear CUDA cache to free memory
+        logits_matrix[i] = logits_cpu[1:, -1, :] # Exclude the embedding layer
+        del logits_cpu
+        torch.cuda.empty_cache()
+    torch.save(logits_matrix.cpu(), save_path)
 
 if __name__ == "__main__":
     main()

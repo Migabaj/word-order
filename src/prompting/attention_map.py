@@ -82,9 +82,6 @@ def main():
                 offset = j
             inp_ids_segment = prompt_ids[:, :offset]
             inp_tok_segment = prompt_tok[:offset]
-            # logits, cache = model.run_with_cache(
-            #     inp_tokens_segment, remove_batch_dim=True
-            # )
             _, attn = wrapper.get_layers_w_attns(inp_ids_segment)
             attention_pattern = torch.zeros(
                 n_layer,
@@ -155,14 +152,6 @@ def main():
             ) as fw:
                 fw.write(str(first_layer_soup))
             print("Done!")
-
-            # with open(
-            #     f"word_order_logitlens/attn/{sent_i}-off{-j}-l{l}.html",
-            #     "w",
-            #     encoding="utf-8",
-            # ) as fw:
-            #     fw.write(str(rendered_html))
-
 
 if __name__ == "__main__":
     main()

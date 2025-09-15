@@ -2,6 +2,7 @@ class TokenizerProcessor:
     def __init__(self, tokenizer):
         self.tokenizer = tokenizer
         self.vocab = tokenizer.get_vocab()
+        self.id2token = {ind: tok for tok,ind in self.vocab.items()}
 
     def token_probabilities(self, token, probs):
         token_id = self.vocab.get(token, None)
