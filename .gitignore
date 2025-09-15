@@ -2,8 +2,12 @@
 .condor/
 Dockerfile
 
+# Docker files
+.docker/
+
 # Model output
 output/
+figures/attn/
 
 # Byte-compiled / optimized / DLL files
 __pycache__/
