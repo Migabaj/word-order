@@ -1,0 +1,8 @@
+verb-eng,noun-eng,modal-eng,verb-ger,noun-ger,modal-ger,noun-tur,verb-tur,modal-tur,phrase-eng,phrase-ger,phrase_cutoff_after_subject-eng,phrase_cutoff_after_subject-ger,phrase-tur,phrase_cutoff_after_subject-tur
+count,mathematician,has to,rechnen,Mathematiker,muss,matematikçi,saymak,zorunda,the mathematician has to count,der Mathematiker,the mathematician,der Mathematiker,matematikçi saymak zorunda,matematikçi
+die,spider,has to,sterben,Spinne,muss,örümcek,ölmek,zorunda,the spider has to die,die Spinne muss sterben,the spider,die Spinne,örümcek ölmek zorunda,örümcek
+run,boy,has to,rennen,Junge,muss,çocuk,koşmak,zorunda,the boy has to run,der Junge muss rennen,the boy,der Junge,çocuk koşmak zorunda,çocuk
+laugh,architect,has to,lachen,Architekt,muss,mimar,gülmek,zorunda,the architect has to laugh,der Architekt muss lachen,the architect,der Architekt,mimar gülmek zorunda,mimar
+work,man,has to,arbeiten,Mann,muss,adam,çalışmak,zorunda,the man has to work,der Mann muss arbeiten,the man,der Mann,adam çalışmak zorunda,adam
+sleep,teacher,has to,schlafen,Lehrer,muss,öğretmen,uyumak,zorunda,the teacher has to sleep,der Lehrer muss schlafen,the teacher,der Lehrer,öğretmen uyumak zorunda,öğretmen
+write,student,has to,schreiben,Student,muss,öğrenci,yazmak,zorunda,the student has to write,der Student muss schreiben,the student,der Student,öğrenci yazmak zorunda,öğrenci
