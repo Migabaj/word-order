@@ -28,11 +28,12 @@ def get_token_interpretable(sentence, token, tokenizer, add_space: bool = False)
 def intervene(model,
     base_encoding: torch.tensor,
     source_encoding: torch.tensor,
-    layer_set: list
+    layer_set: list,
+    component: str = "block_output",
     ) -> torch.tensor:
 
-    base_last_token_index = len(base_encoding['input_ids'][0]) - 1  # Use len() to get the length of the sequence
-    source_last_token_index = len(source_encoding['input_ids'][0]) - 1
+    base_last_token_index = len(base_encoding['input_ids']) - 1  # Use len() to get the length of the sequence
+    source_last_token_index = len(source_encoding['input_ids']) - 1
 
     # Create intervention for specific layers
     config = pv.IntervenableConfig([{
