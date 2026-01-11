@@ -200,7 +200,9 @@ temp_*
 readings/
 
 # datasets
-data/**
+data/synsets/**
+data/prompts/**
+data/translations/**
 **/toy_*
 
 # docs html
