@@ -6,6 +6,16 @@ from dataclasses import dataclass
 from modeling.wrapper import load_mgpt, load_gptj, load_gptneo, load_llama, load_eurollm, \
     GPTWrapper, GPTJWrapper, LLamaWrapper, EuroLLMWrapper
 
+model_to_num_layers_attr = {
+    "ai-forever/mGPT": "config.n_layer",
+    "CohereLabs/aya-expanse-8b": "config.num_hidden_layers",
+}
+
+model_to_num_heads_attr = {
+    "ai-forever/mGPT": "config.n_head",
+    "CohereLabs/aya-expanse-8b": "config.num_attention_heads",
+}
+
 @dataclass
 class ParseArg:
     argname: Union[str, List[str]]
