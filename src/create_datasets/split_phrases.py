@@ -14,9 +14,10 @@ def split_phrase(phrase: str, regex: str) -> Dict[str, str]:
     >>> split_phrase(phrase, regex)
     {'adj_eng': 'blue', 'noun_eng': 'puppy'}
     """
+    if not phrase:
+        return {}
     match = re.match(regex, phrase)
     if not match:
-        print(phrase)
         raise ValueError("Phrase does not match the specified structure.")
     return match.groupdict()
 
@@ -27,7 +28,7 @@ def main():
         ParseArg("--regex", type=str),
         ParseArg("--add-to-df", action='store_true'),
     )
-    df = pd.read_csv(args.data)
+    df = pd.read_csv(args.data).fillna("")
     col = args.column
     regex = args.regex
 
