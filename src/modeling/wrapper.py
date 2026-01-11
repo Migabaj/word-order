@@ -182,6 +182,17 @@ class ModelWrapper(nn.Module):
         hidden_states, true_logits = outputs.hidden_states, outputs.logits
         return hidden_states
 
+    def get_logits_per_layer(self, tokens: List[int], **model_kwargs) -> torch.Tensor:
+        """Get logits for the given tokens at each layer
+
+        :param tokens: List of token ids
+        :param model_kwargs: Possible keyword arguments for the model's forward call
+        :return: Logits for the given tokens at each layer
+        """
+        outputs = self.model(input_ids=tokens, output_hidden_states=True, **model_kwargs)
+        hidden_states, true_logits = outputs.hidden_states, outputs.logits
+        return torch.stack(hidden_states).squeeze(-1)
+
     def get_layers(self, tokens: List[int], **model_kwargs) -> torch.Tensor:
         """Decode hidden states and return a tensor of the resulting projections.
             Returns a tensor of shape (\ :math:\)
