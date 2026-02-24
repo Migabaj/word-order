@@ -15,7 +15,7 @@ FRENCH_COLUMNS = ["phrase_empty", "noun_fre"]
 FRENCH_WORDS = ["noun_fre", "adj_fre"]
 
 def main():
-    hf_token = "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"
+    hf_token = "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"
     login(hf_token)
     model, tokenizer = load_llama(cache_dir="/scratch/msonkin/word-order-thesis/cache/")
     wrapper = LLamaWrapper(model, tokenizer)

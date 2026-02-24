@@ -13,7 +13,7 @@ French: \""""
 NOUN_ADJ_DATA = "word-order-thesis/data/noun-adj.csv"
 
 def main():
-    hf_token = "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"
+    hf_token = "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"
     login(hf_token)
     model, tokenizer = load_llama(cache_dir="/scratch/msonkin/word-order-thesis/cache/")
     wrapper = LLamaWrapper(model, tokenizer)
