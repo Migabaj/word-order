@@ -29,6 +29,27 @@ def single_list_to_string(l):
         return l[0]
     return l
 
+def change_rus_adj(word, animacy_marker):
+    parse = morph.parse(word)[0]
+    try:
+        if parse.tag.gender == 'masc':
+            return parse.inflect({'accs', parse.tag.number, parse.tag.gender, animacy_marker}).word
+        else:
+            return parse.inflect({'accs', parse.tag.number, parse.tag.gender}).word
+    except:
+        return 0
+    
+def change_rus_noun(word):
+    parse = morph.parse(word)[0]
+    try:
+        return parse.inflect({'accs'}).word
+    except:
+        return 0
+
+def animacy(word):
+    parse = morph.parse(word)[0]
+    return parse.tag.animacy
+
 def main():
     args = parse_plain_args(
         ParseArg("data", type=str, help="Path to the word dataset"),
