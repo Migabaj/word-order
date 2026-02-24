@@ -1,0 +1,32 @@
+# load_data: True
+# block_intervention_save_path: output/intervention/probs/block_noun-adj_llama-3-8b_eng-vie_eng-ger.csv
+# head_intervention_save_path: output/intervention/probs/head_noun-adj_llama-3-8b_eng-vie_eng-ger.csv
+
+start_with_space_base: False
+start_with_space_source: False
+# model_id: meta-llama/Meta-Llama-3-8B
+cache_dir: /scratch/msonkin/word-order-thesis/cache/
+oneshot_template: '{lang_src}: "{sentence_src}" - {lang_tgt}: "{sentence_tgt}"'
+last_prompt_template: '{lang_src}: "{sentence_src}" - {lang_tgt}: "'
+num_shots: 1
+data_path: "data/noun-adj.csv"
+# src_lang_base: eng
+# tgt_lang_base: vie
+# src_lang_source: eng
+# tgt_lang_source: ger
+# s_base: "noun"
+# s_source: "adj"
+# sample_size: 50
+random_seed: 42
+sentences_src_prefix_base: "phrase"
+sentences_tgt_prefix_base: "phrase"
+sentences_src_prefix_source: "phrase"
+sentences_tgt_prefix_source: "phrase"
+shot_data_src_base: 'phrase'
+shot_data_tgt_base: 'phrase'
+shot_data_src_source: 'phrase'
+shot_data_tgt_source: 'phrase'
+pos_prefixes:
+  - "noun"
+  - "adj"
+hf_token: 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
