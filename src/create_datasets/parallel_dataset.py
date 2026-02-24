@@ -4,6 +4,7 @@ import pandas as pd
 from typing import List, Dict, Union
 from collections import defaultdict
 from transformers import AutoTokenizer, AutoModelForCausalLM
+from transformer_lens import HookedTransformer
 
 from utils.langs import iso2language
 
@@ -28,9 +29,12 @@ class ParallelDataset:
         if model is not None and not isinstance(model, str):
             self.model = model
             self.model_id = None
-            self.tokenizer = AutoTokenizer.from_pretrained(
-                model.config._name_or_path, cache_dir=cache_dir
-            )
+            if isinstance(model, HookedTransformer):
+                self.tokenizer = model.tokenizer
+            else:
+                self.tokenizer = AutoTokenizer.from_pretrained(
+                    model.config._name_or_path, cache_dir=cache_dir
+                )
         else:
             self.model = model
             self.tokenizer = AutoTokenizer.from_pretrained(model, cache_dir=cache_dir)
