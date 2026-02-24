@@ -13,6 +13,8 @@ iso2language = {
     "zho": "中文",
     "tur": "Türkçe",
     "ned": "Nederlands",
+    "ara": "العربية",
+    "vie": "Tiếng Việt",
 }
 
 iso2language_eng = {
@@ -25,4 +27,6 @@ iso2language_eng = {
     "zho": "Chinese",
     "tur": "Turkish",
     "ned": "Dutch",
+    "ara": "Arabic",
+    "vie": "Vietnamese",
 }

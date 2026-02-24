@@ -7,13 +7,15 @@ from modeling.wrapper import load_mgpt, load_gptj, load_gptneo, load_llama, load
     GPTWrapper, GPTJWrapper, LLamaWrapper, EuroLLMWrapper
 
 model_to_num_layers_attr = {
-    "ai-forever/mGPT": "config.n_layer",
-    "CohereLabs/aya-expanse-8b": "config.num_hidden_layers",
+    "GPT2LMHeadModel": "config.n_layer",
+    "CohereForCausalLM": "config.num_hidden_layers",
+    "LlamaForCausalLM": "config.num_hidden_layers",
 }
 
 model_to_num_heads_attr = {
-    "ai-forever/mGPT": "config.n_head",
-    "CohereLabs/aya-expanse-8b": "config.num_attention_heads",
+    "GPT2LMHeadModel": "config.n_head",
+    "CohereForCausalLM": "config.num_attention_heads",
+    "LlamaForCausalLM": "config.num_attention_heads",
 }
 
 @dataclass
