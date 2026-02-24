@@ -43,8 +43,8 @@ class ParallelDataset:
         self.lang_tgt = lang_tgt
         self.sentences_src_prefix = sentences_src_prefix
         self.sentences_tgt_prefix = sentences_tgt_prefix
-        self.sentences_src = self.df[f"{sentences_src_prefix}{lang_src}"].tolist()
-        self.sentences_tgt = self.df[f"{sentences_tgt_prefix}{lang_tgt}"].tolist()
+        self.sentences_src = self.df[f"{sentences_src_prefix}-{lang_src}"].tolist()
+        self.sentences_tgt = self.df[f"{sentences_tgt_prefix}-{lang_tgt}"].tolist()
         self.sentences = []
         for sent_src, sent_tgt in zip(self.sentences_src, self.sentences_tgt):
             self.sentences.append((sent_src, sent_tgt))
