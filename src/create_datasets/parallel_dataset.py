@@ -71,20 +71,20 @@ class ParallelDataset:
         template,
         shots=1,
         last_prompt_template=None,
-        shot_data_src: str = None,
-        shot_data_tgt: str = None,
+        shot_data_src_prefix: str = None,
+        shot_data_tgt_prefix: str = None,
         shuffle_shots: bool = True,
     ) -> List[str]:
         prompts = []
 
         # Define what sentences to use for shots
-        if shot_data_src is not None:
-            sentences_src = self.df[shot_data_src].tolist()
+        if shot_data_src_prefix is not None:
+            sentences_src = self.df[f"{shot_data_src_prefix}-{self.lang_src}"].tolist()
         else:
             sentences_src = self.sentences_src
 
-        if shot_data_tgt is not None:
-            sentences_tgt = self.df[shot_data_tgt].tolist()
+        if shot_data_tgt_prefix is not None:
+            sentences_tgt = self.df[f"{shot_data_tgt_prefix}-{self.lang_tgt}"].tolist()
         else:
             sentences_tgt = self.sentences_tgt
 
