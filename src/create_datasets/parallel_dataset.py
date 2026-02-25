@@ -151,3 +151,43 @@ class ParallelDataset:
 
         self.prompts_tokens = prompts_tokens
         return prompts_tokens
+
+def make_parallel_dataset(
+    model_id: str,
+    filepath: str,
+    src_lang: str,
+    tgt_lang: str,
+    sentences_src_prefix: str,
+    sentences_tgt_prefix: str,
+    oneshot_template: str,
+    last_prompt_template: str,
+    num_shots: int = 1,
+    sample_size: int = 199,
+    random_seed: int = 42,
+    shot_data_src_prefix: str = "phrase",
+    shot_data_tgt_prefix: str = "phrase",
+    ):
+    df = pd.read_csv(filepath)
+    df = df.sample(n=sample_size, random_state=random_seed).reset_index(drop=True)
+
+    base_dataset = ParallelDataset(
+        model_id,
+        dataframe=df,
+        lang_src=src_lang,
+        lang_tgt=tgt_lang,
+        sentences_src_prefix=sentences_src_prefix,
+        sentences_tgt_prefix=sentences_tgt_prefix,
+        random_seed=random_seed
+    )
+    base_prompts = base_dataset.format(
+        oneshot_template,
+        shots=num_shots,
+        last_prompt_template=last_prompt_template,
+        shot_data_src_prefix=shot_data_src,
+        shot_data_tgt_prefix=shot_data_tgt,
+        shuffle_shots=False,
+        )
+    print("=====Example of Base Prompt=====")
+    print(base_prompts[0])
+
+    base_tokens = base_dataset.prompts_to_tokens()
