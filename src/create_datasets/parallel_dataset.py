@@ -152,7 +152,7 @@ class ParallelDataset:
         self.prompts_tokens = prompts_tokens
         return prompts_tokens
 
-def make_parallel_dataset(
+def create_parallel_dataset(
     model_id: str,
     filepath: str,
     src_lang: str,
