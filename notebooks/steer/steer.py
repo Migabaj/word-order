@@ -4,28 +4,30 @@ from tqdm import tqdm
 from transformers import AutoModelForCausalLM, AutoTokenizer
 from huggingface_hub import login
 
-from create_datasets.parallel_dataset import ParallelDataset
+from create_datasets.parallel_dataset import ParallelDataset, create_parallel_dataset
 from prompting.intervene import collect_mean_activation, steer
 from collect_mean_activations import create_parallel_dataset
 
 # static parameters
 MODELS = [
     # {"model_id": "ai-forever/mGPT", "short": "mgpt", "head": (11, 2)},
-    {"model_id": "CohereLabs/aya-expanse-8b", "short": "aya-expanse-8b", "head": (15, 0)},
-    # {"model_id": "meta-llama/Meta-Llama-3-8B", "short": "llama-3-8b", "head": (14, 25)},
+    # {"model_id": "CohereLabs/aya-expanse-8b", "short": "aya-expanse-8b", "head": (15, 0)},
+    {"model_id": "meta-llama/Meta-Llama-3-8B", "short": "llama-3-8b", "head": (14, 25)},
 ]
-LANGS = ["ger", "fre", "rus", "zho", "ita", "ned", "vie"]
-POS_PREFIXES = ["noun", "adj"]
-DATAPATH = "data/noun-adj.csv"
+LANGS = ["eng", "ger", "fre", "pol"]
+POS_PREFIXES = ["verb", "obj"]
+DATAPATH = "data/relative.csv"
 CACHE_DIR = "/scratch/msonkin/word-order-thesis/cache/"
 ONESHOT_TEMPLATE = "{lang_src}: \"{sentence_src}\" - {lang_tgt}: \"{sentence_tgt}\""
-LAST_TEMPLATE = "{lang_src}: \"{sentence_src}\" - {lang_tgt}: \""
+LAST_TEMPLATE = "{lang_src}: \"{sentence_src}\" - {lang_tgt}: \"{sentence_tgt}"
 NUM_SHOTS = 1
+EXPERIMENT = "relative"
 HF_TOKEN = "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"
+SAMPLE_SIZE = 26
 
 # parameters for token prediction (with vs. without space)
-start_with_space_base = False
-start_with_space_plant = False
+start_with_space_base = True
+# start_with_space_plant = True
 
 # set up cuda
 device = torch.device(
@@ -34,29 +36,29 @@ device = torch.device(
 # set up softmax conversion
 sm = torch.nn.Softmax(dim=-1)
 
-def make_parallel_dataset(
-    filepath: str,
-    model_id: str,
-    src_lang: str,
-    tgt_lang: str,
-    sentences_src_prefix: str = "phrase",
-    sentences_tgt_prefix: str = "phrase",
-    sample_size: int = 199,
-    random_seed: int = 42
-    ):
-    df = pd.read_csv(filepath)
-    base_df = df.sample(n=sample_size, random_state=42).reset_index(drop=True)
+# def make_parallel_dataset(
+#     filepath: str,
+#     model_id: str,
+#     src_lang: str,
+#     tgt_lang: str,
+#     sentences_src_prefix: str = "phrase",
+#     sentences_tgt_prefix: str = "phrase",
+#     sample_size: int = 199,
+#     random_seed: int = 42
+#     ):
+#     df = pd.read_csv(filepath)
+#     base_df = df.sample(n=sample_size, random_state=42).reset_index(drop=True)
 
-    base_dataset = ParallelDataset(
-        model_id,
-        dataframe=base_df,
-        lang_src=src_lang,
-        lang_tgt=tgt_lang,
-        sentences_src_prefix=sentences_src_prefix,
-        sentences_tgt_prefix=sentences_tgt_prefix,
-        random_seed=random_seed
-    )
-    return base_dataset
+#     base_dataset = ParallelDataset(
+#         model_id,
+#         dataframe=base_df,
+#         lang_src=src_lang,
+#         lang_tgt=tgt_lang,
+#         sentences_src_prefix=sentences_src_prefix,
+#         sentences_tgt_prefix=sentences_tgt_prefix,
+#         random_seed=random_seed
+#     )
+#     return base_dataset
 
 def run_experiment(
     model,
@@ -139,11 +141,28 @@ def main():
             # check sample size
             if any([lang in [src_lang, tgt_lang] for lang in ["vie", "zho"]]):
                 sample_size = 50
-            else:
+            elif SAMPLE_SIZE is None:
                 sample_size = 199
+            else:
+                sample_size = SAMPLE_SIZE
+            
+            df = pd.read_csv(DATAPATH)
+            df = df.sample(n=sample_size, random_state=42).reset_index(drop=True)
 
             # define database
-            dataset_base = make_parallel_dataset(DATAPATH, model_id, src_lang, tgt_lang, sample_size=sample_size)
+            dataset_base = create_parallel_dataset(
+                model_id,
+                df,
+                src_lang,
+                tgt_lang,
+                "phrase",
+                "phrase_cutoff_after_subject",
+                oneshot_template=ONESHOT_TEMPLATE,
+                last_prompt_template=LAST_TEMPLATE,
+                num_shots=NUM_SHOTS,
+                sample_size=sample_size,
+                random_seed=42,
+            )
 
             # for different plant settings
             for tgt_lang_plant in LANGS:
@@ -153,8 +172,8 @@ def main():
                     continue
                 
                 # set up variables
-                save_path = f"output/steer/probs/noun-adj_{model_short}_{src_lang}-{tgt_lang}_{src_lang_plant}-{tgt_lang_plant}_layer{layer}_head{head}.csv"
-                mean_act_filepath = f"output/activations/{model_short}_{src_lang_plant}-{tgt_lang_plant}_layer{layer}_head{head}.pt"
+                save_path = f"output/steer/probs/{EXPERIMENT}_{model_short}_{src_lang}-{tgt_lang}_{src_lang_plant}-{tgt_lang_plant}_layer{layer}_head{head}.csv"
+                mean_act_filepath = f"output/activations/{EXPERIMENT}_{model_short}_{src_lang_plant}-{tgt_lang_plant}_layer{layer}_head{head}.pt"
                 mean_act = torch.load(mean_act_filepath)
 
                 # run experiment
