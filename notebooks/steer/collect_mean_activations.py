@@ -54,9 +54,6 @@ def main():
                     else:
                         df = dataframe
 
-                    if src_lang == tgt_lang:
-                        pbar.update(1)
-                        continue
                     parallel_dataset = create_parallel_dataset(src_lang, tgt_lang, df, model_id, "phrase", random_seed=42)
                     prompts = parallel_dataset.format(
                         ONESHOT_TEMPLATE,
