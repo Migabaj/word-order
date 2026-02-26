@@ -154,7 +154,7 @@ class ParallelDataset:
 
 def create_parallel_dataset(
     model_id: str,
-    filepath: str,
+    df: pd.DataFrame,
     src_lang: str,
     tgt_lang: str,
     sentences_src_prefix: str,
@@ -167,10 +167,7 @@ def create_parallel_dataset(
     shot_data_src_prefix: str = "phrase",
     shot_data_tgt_prefix: str = "phrase",
     ):
-    df = pd.read_csv(filepath)
-    df = df.sample(n=sample_size, random_state=random_seed).reset_index(drop=True)
-
-    base_dataset = ParallelDataset(
+    dataset = ParallelDataset(
         model_id,
         dataframe=df,
         lang_src=src_lang,
@@ -179,15 +176,13 @@ def create_parallel_dataset(
         sentences_tgt_prefix=sentences_tgt_prefix,
         random_seed=random_seed
     )
-    base_prompts = base_dataset.format(
+    _ = dataset.format(
         oneshot_template,
         shots=num_shots,
         last_prompt_template=last_prompt_template,
-        shot_data_src_prefix=shot_data_src,
-        shot_data_tgt_prefix=shot_data_tgt,
+        shot_data_src_prefix=shot_data_src_prefix,
+        shot_data_tgt_prefix=shot_data_tgt_prefix,
         shuffle_shots=False,
         )
-    print("=====Example of Base Prompt=====")
-    print(base_prompts[0])
 
-    base_tokens = base_dataset.prompts_to_tokens()
+    return dataset
