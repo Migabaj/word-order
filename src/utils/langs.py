@@ -15,6 +15,7 @@ iso2language = {
     "ned": "Nederlands",
     "ara": "العربية",
     "vie": "Tiếng Việt",
+    "pol": "Polski",
 }
 
 iso2language_eng = {
@@ -29,4 +30,5 @@ iso2language_eng = {
     "ned": "Dutch",
     "ara": "Arabic",
     "vie": "Vietnamese",
+    "pol": "Polish"
 }
