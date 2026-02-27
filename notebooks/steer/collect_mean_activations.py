@@ -1,4 +1,6 @@
+import os
 import torch
+import argparse
 import pandas as pd
 from tqdm import tqdm
 from transformers import AutoModelForCausalLM, AutoTokenizer
@@ -6,88 +8,154 @@ from huggingface_hub import login
 
 from create_datasets.parallel_dataset import ParallelDataset, create_parallel_dataset
 from prompting.intervene import collect_mean_activation
+from utils.model_args import model_to_short, model_to_nounadj_head
 
-MODELS = [
-    {"model_id": "ai-forever/mGPT", "short": "mgpt", "head": (11, 2)},
-    # {"model_id": "CohereLabs/aya-expanse-8b", "short": "aya-expanse-8b", "head": (15, 0)},
-    # {"model_id": "meta-llama/Meta-Llama-3-8B", "short": "llama-3-8b", "head": (14, 25)},
-]
-LANGS = ["eng", "ger", "tur", "zho"]
-DATAPATH = "data/modal-verbs.csv"
-CACHE_DIR = "/scratch/msonkin/word-order-thesis/cache/"
-ONESHOT_TEMPLATE = "{lang_src}: \"{sentence_src}\" - {lang_tgt}: \"{sentence_tgt}\""
-LAST_TEMPLATE = "{lang_src}: \"{sentence_src}\" - {lang_tgt}: \"{sentence_tgt}"
-NUM_SHOTS = 1
-EXPERIMENT = "modal-verbs"
-HF_TOKEN = "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"
-SAMPLE_SIZE = 26
-
-# def create_parallel_dataset(src_lang, tgt_lang, df, model_id, sentences_prefix, random_seed=None):
-#     parallel_dataset = ParallelDataset(
-#         model_id,
-#         dataframe=df,
-#         lang_src=src_lang,
-#         lang_tgt=tgt_lang,
-#         sentences_src_prefix=sentences_prefix,
-#         sentences_tgt_prefix=sentences_prefix,
-#         random_seed=random_seed,
-#     )
-#     return parallel_dataset
+def get_args():
+    parser = argparse.ArgumentParser(description="Steering experiment runner")
+    
+    # Model arguments
+    parser.add_argument(
+        "--model-id",
+        type=str,
+        default="meta-llama/Meta-Llama-3-8B",
+        help="Model ID from HuggingFace"
+    )
+    parser.add_argument(
+        "--layer",
+        type=int,
+        default=None,
+        help="Layer index for attention head"
+    )
+    parser.add_argument(
+        "--head",
+        type=int,
+        default=None,
+        help="Head index for attention head"
+    )
+    
+    # Language arguments
+    parser.add_argument(
+        "--langs",
+        type=str,
+        nargs="+",
+        default=["eng", "ger", "fre", "pol"],
+        help="Target languages to evaluate"
+    )
+    
+    # Data arguments
+    parser.add_argument(
+        "--datapath",
+        type=str,
+        help="Path to dataset CSV"
+    )
+    parser.add_argument(
+        "--cache-dir",
+        type=str,
+        default="/scratch/msonkin/word-order-thesis/cache/",
+        help="HuggingFace cache directory"
+    )
+    parser.add_argument(
+        "--sample-size",
+        type=int,
+        default=199,
+        help="Number of samples to use from dataset"
+    )
+    
+    # Prompting arguments
+    parser.add_argument(
+        "--oneshot-template",
+        type=str,
+        default="{lang_src}: \"{sentence_src}\" - {lang_tgt}: \"{sentence_tgt}\"",
+        help="One-shot prompt template"
+    )
+    parser.add_argument(
+        "--last-template",
+        type=str,
+        default="{lang_src}: \"{sentence_src}\" - {lang_tgt}: \"{sentence_tgt}",
+        help="Last prompt template (without closing quote)"
+    )
+    parser.add_argument(
+        "--num-shots",
+        type=int,
+        default=1,
+        help="Number of shots for few-shot learning"
+    )
+    
+    parser.add_argument(
+        "--hf-token",
+        type=str,
+        default="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",
+        help="HuggingFace API token"
+    )
+    
+    args = vars(parser.parse_args())
+    return args
 
 def main():
-    login(HF_TOKEN)
+    args = get_args()
+
+    login(args["hf_token"])
     device = torch.device(
         "mps" if torch.backends.mps.is_available() else "cuda" if torch.cuda.is_available() else "cpu"
     )
-    dataframe = pd.read_csv(DATAPATH)
-    print(dataframe.head())
 
-    for model_dict in MODELS:
-        model_id = model_dict['model_id']
-        model_short = model_dict['short']
-        head = model_dict['head']
-        model = AutoModelForCausalLM.from_pretrained(model_id, cache_dir=CACHE_DIR).to(device)
-        tokenizer = AutoTokenizer.from_pretrained(model_id, cache_dir=CACHE_DIR)
-        with tqdm(total=len(LANGS)**2) as pbar:
-            for src_lang in LANGS:
-                for tgt_lang in LANGS:
-                    if any(l in ["zho", "vie"] for l in [src_lang, tgt_lang]):
-                        df = dataframe.sample(n=SAMPLE_SIZE, random_state=42).reset_index(drop=True)
-                    else:
-                        df = dataframe
+    # Extract arguments
+    model_id = args["model_id"]
+    langs = args["langs"]
+    datapath = args["datapath"]
+    cache_dir = args["cache_dir"]
+    sample_size = args["sample_size"]
+    oneshot_template = args["oneshot_template"]
+    last_template = args["last_template"]
+    num_shots = args["num_shots"]
 
-                    parallel_dataset = create_parallel_dataset(
-                        model_id,
-                        df,
-                        src_lang,
-                        tgt_lang,
-                        "phrase",
-                        "phrase_cutoff_after_subject",
-                        oneshot_template=ONESHOT_TEMPLATE,
-                        last_prompt_template=LAST_TEMPLATE,
-                        num_shots=1,
-                        sample_size=7,
-                        random_seed=42,
-                        )
-                    prompts = parallel_dataset.prompts_to_tokens()
-                    prompts = [tokens.to(device) for tokens in prompts]
-                    print(prompts[0])
-                    print(tokenizer.decode(prompts[0]['input_ids'][0]))
-                    mean_act = collect_mean_activation(
-                        model,
-                        tokenizer,
-                        prompts,
-                        "head_attention_value_output",
-                        layer_i=model_dict['head'][0],
-                        head_i=model_dict['head'][1],
-                        unit="h.pos"
+    dataframe = pd.read_csv(datapath)
+
+    model_short = model_to_short[model_id]
+    layer = args["layer"] if args["layer"] is not None else model_to_nounadj_head[model_id][0]
+    head = args["head"] if args["head"] is not None else model_to_nounadj_head[model_id][1]
+
+    experiment = os.path.splitext(os.path.split(datapath)[-1])[0]
+
+    # set up model
+    model = AutoModelForCausalLM.from_pretrained(model_id, cache_dir=cache_dir).to(device)
+    tokenizer = AutoTokenizer.from_pretrained(model_id, cache_dir=cache_dir)
+
+    with tqdm(total=len(langs)**2) as pbar:
+        for src_lang in langs:
+            for tgt_lang in langs:
+                parallel_dataset = create_parallel_dataset(
+                    model_id,
+                    dataframe,
+                    src_lang,
+                    tgt_lang,
+                    "phrase",
+                    "phrase_cutoff_after_subject",
+                    oneshot_template=oneshot_template,
+                    last_prompt_template=last_template,
+                    num_shots=num_shots,
+                    sample_size=sample_size,
+                    random_seed=42,
                     )
+                prompts = parallel_dataset.prompts_to_tokens()
+                prompts = [tokens.to(device) for tokens in prompts]
+                print(prompts[0])
+                print(tokenizer.decode(prompts[0]['input_ids'][0]))
+                mean_act = collect_mean_activation(
+                    model,
+                    tokenizer,
+                    prompts,
+                    "head_attention_value_output",
+                    layer_i=layer,
+                    head_i=head,
+                    unit="h.pos"
+                )
 
-                    filename = f"output/activations/{EXPERIMENT}_{model_short}_{src_lang}-{tgt_lang}_layer{head[0]}_head{head[1]}.pt"
-                    torch.save(mean_act, filename)
+                filename = f"output/activations/{experiment}_{model_short}_{src_lang}-{tgt_lang}_layer{layer}_head{head}.pt"
+                torch.save(mean_act, filename)
 
-                    torch.cuda.empty_cache()
-                    pbar.update(1)
+                torch.cuda.empty_cache()
+                pbar.update(1)
 
 if __name__ == "__main__":
     main()
