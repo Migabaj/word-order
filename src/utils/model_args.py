@@ -18,6 +18,18 @@ model_to_num_heads_attr = {
     "LlamaForCausalLM": "config.num_attention_heads",
 }
 
+model_to_short = {
+    "ai-forever/mGPT": "mgpt",
+    "CohereLabs/aya-expanse-8b": "aya-expanse-8b",
+    "meta-llama/Meta-Llama-3-8B": "llama-3-8b",
+}
+
+model_to_nounadj_head = {
+    "ai-forever/mGPT": (11, 2),
+    "CohereLabs/aya-expanse-8b": (15, 0),
+    "meta-llama/Meta-Llama-3-8B": (14, 25),
+}
+
 @dataclass
 class ParseArg:
     argname: Union[str, List[str]]
