@@ -9,10 +9,12 @@ import pandas as pd
 from tqdm import tqdm
 from transformers import AutoModelForCausalLM, AutoTokenizer
 from huggingface_hub import login
+from pyvene.models.modeling_utils import getattr_for_torch_module
 
 from create_datasets.parallel_dataset import ParallelDataset, create_parallel_dataset
 from prompting.intervene import collect_mean_activation, steer
 from utils.model_args import model_to_short, model_to_nounadj_head
+from utils.model_args import model_to_num_layers_attr, model_to_num_heads_attr
 from utils.langs import start_with_space
 from prompting.intervene import intervention_config, intervention_data
 
@@ -184,6 +186,13 @@ def get_args():
         help="Whether to check for existing save path filename before running experiment"
     )
 
+    parser.add_argument(
+        "--layers",
+        nargs="+",
+        default=None,
+        help="Layers to intervene on (e.g. '0 1 2' or '0-2')"
+    )
+
     args = vars(parser.parse_args())
     return args
 
@@ -239,6 +248,9 @@ def run_experiment_with_args(
     shot_data_src_prefix = args["shot_data_src_prefix"]
     shot_data_tgt_prefix = args["shot_data_tgt_prefix"]
 
+    layers = args["layers"]
+
+
     print(f"Target language (Base): {tgt_lang_base}, Target language (Plant): {tgt_lang_plant}")
     print(start_with_space_base, start_with_space_plant)
 
@@ -267,6 +279,8 @@ def run_experiment_with_args(
     model = AutoModelForCausalLM.from_pretrained(model_id, cache_dir=cache_dir,  attn_implementation="eager").to(device)
     tokenizer = AutoTokenizer.from_pretrained(model_id, cache_dir=cache_dir)
     model_class = model.__class__.__name__
+    num_heads = getattr_for_torch_module(model, model_to_num_heads_attr[model_class])
+
 
     if plant_datapath is not None:
         df_plant = pd.read_csv(plant_datapath)
@@ -336,22 +350,23 @@ def run_experiment_with_args(
             start_with_space_base=start_with_space_base,
             start_with_space_plant=start_with_space_plant
         )
-
-        data, data_topk = intervention_data(
-            model,
-            tokenizer,
-            prompt_base,
-            prompt_plant, 
-            pos_base,
-            pos_plant,
-            tokentype2token,
-            sentence_index=row_i,
-            component_type=component,
-            data=data,
-            data_topk=data_topk,
-            write_down_top_k=5,
-        )
-
+        for head_i in range(num_heads):
+            data, data_topk = intervention_data(
+                model,
+                tokenizer,
+                prompt_base,
+                prompt_plant, 
+                pos_base,
+                pos_plant,
+                tokentype2token,
+                sentence_index=row_i,
+                head_i=head_i,
+                component_type="head_attention_value_output",
+                data=data,
+                data_topk=data_topk,
+                write_down_top_k=10,
+                patch_layers=layers
+            )
     df_probs = pd.DataFrame(data)
     df_probs.to_csv(save_path)
 
