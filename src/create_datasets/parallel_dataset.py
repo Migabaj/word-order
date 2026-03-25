@@ -166,6 +166,7 @@ def create_parallel_dataset(
     random_seed: int = 42,
     shot_data_src_prefix: str = "phrase",
     shot_data_tgt_prefix: str = "phrase",
+    return_prompts: bool = False,
     ):
     dataset = ParallelDataset(
         model_id,
@@ -176,7 +177,7 @@ def create_parallel_dataset(
         sentences_tgt_prefix=sentences_tgt_prefix,
         random_seed=random_seed
     )
-    _ = dataset.format(
+    prompts = dataset.format(
         oneshot_template,
         shots=num_shots,
         last_prompt_template=last_prompt_template,
@@ -184,5 +185,6 @@ def create_parallel_dataset(
         shot_data_tgt_prefix=shot_data_tgt_prefix,
         shuffle_shots=False,
         )
-
+    if return_prompts:
+        return dataset, prompts
     return dataset
