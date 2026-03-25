@@ -1,6 +1,6 @@
 This is the code that was used to run our experiments.
 
-The `src/` directory contains the code used for running experiments.
+The `src/` directory contains the "building block" code used for running experiments.
 
 ## LogitLens
 
