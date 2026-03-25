@@ -1,0 +1,9 @@
+src_lang_base,src_lang_plant,tgt_lang_base,tgt_lang_plant
+eng,eng,rus,jap
+eng,eng,jap,rus
+eng,eng,zho,jap
+eng,eng,jap,zho
+eng,eng,rus,tur
+eng,eng,tur,rus
+eng,eng,zho,tur
+eng,eng,tur,zho

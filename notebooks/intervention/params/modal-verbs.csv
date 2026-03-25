@@ -1,0 +1,17 @@
+src_lang_base,src_lang_plant,tgt_lang_base,tgt_lang_plant
+eng,eng,ger,tur
+eng,eng,tur,ger
+eng,eng,zho,tur
+eng,eng,tur,zho
+ger,ger,eng,tur
+ger,ger,tur,eng
+ger,ger,zho,tur
+ger,ger,tur,zho
+zho,zho,eng,tur
+zho,zho,tur,eng
+zho,zho,ger,tur
+zho,zho,tur,ger
+tur,tur,eng,zho
+tur,tur,zho,eng
+tur,tur,ger,zho
+tur,tur,zho,ger
