@@ -19,9 +19,9 @@ model_to_num_heads_attr = {
 }
 
 model_to_short = {
-    "ai-forever/mGPT": "mgpt",
+    "ai-forever/mGPT": "mGPT",
     "CohereLabs/aya-expanse-8b": "aya-expanse-8b",
-    "meta-llama/Meta-Llama-3-8B": "llama-3-8b",
+    "meta-llama/Meta-Llama-3-8B": "Meta-Llama-3-8B",
 }
 
 model_to_nounadj_head = {
