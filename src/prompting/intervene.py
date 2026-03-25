@@ -1,5 +1,6 @@
 import torch
 import pandas as pd
+from tqdm import tqdm
 from typing import Dict, List, Any, Optional
 import pyvene as pv
 from pyvene import top_vals
@@ -82,6 +83,8 @@ def intervention_data(
         data_topk: List[Dict[str, Any]] = None,
         patch_layers: Optional[List[int]] = None,
         write_down_top_k: int = 5,
+        lang2s: Optional[Dict[str, Dict[str, str]]] = None,
+        base_plant_langs: Optional[List[str]] = None,
     ) -> List[Dict[str, Any]]:
     """
     Collect intervention data for a given model component (block output or head attention value output).
@@ -139,6 +142,8 @@ def intervention_data(
         outputs = intervene(model, base, source, base_pos, source_pos, component_type=component_type, layer_i=layer_i, head_i=head_i)
         with torch.inference_mode():
             distrib = sm(outputs.logits)
+        # print("DISTRIB SHAPE:", distrib.shape)
+        # print()
         # print(f"\nTOP VALUES AT LAYER #{layer_i} AT POSITION {base_pos}:")
         if write_down_top_k:
             top_k = top_vals(tokenizer, distrib[0][base_pos], 5, return_results=True)
@@ -153,21 +158,26 @@ def intervention_data(
         for token_type, token in tokentype2token.items():
             part_of_speech, language, lexical_component = token_type.split("-")
             # print(token_type, token, tokenizer.encode(token, add_special_tokens=False)[0], tokenizer.convert_ids_to_tokens(tokenizer.encode(token, add_special_tokens=False)[0]))
-            data.append(
-                {
-                    "sentence_id": sentence_index,
-                    "token_type": token_type,
-                    "token": token,
-                    "prob": float(distrib[0][base_pos][tokenizer.encode(token, add_special_tokens=False)[0],]),
-                    "layer": layer_i,
-                    "head_id": head_i,
-                    "pos": base_pos,
-                    "type": component_type,
-                    "part_of_speech": part_of_speech,
-                    "language": language,
-                    "lexical_component": lexical_component,
-                }
-            )
+            try:
+                data.append(
+                    {
+                        "sentence_id": sentence_index,
+                        "token_type": token_type,
+                        "token": token,
+                        "prob": float(distrib[0][base_pos][tokenizer.encode(token, add_special_tokens=False)[0],]),
+                        "layer": layer_i,
+                        "head_id": head_i,
+                        "pos": base_pos,
+                        "type": component_type,
+                        "part_of_speech": part_of_speech,
+                        "language": language,
+                        "lexical_component": lexical_component,
+                    }
+                )
+            except Exception as e:
+                print(f"Error processing token '{token}' of type '{token_type}' in sentence id {sentence_index}: {e}")
+            # print(token_type, token, tokenizer.encode(token, add_special_tokens=False)[0], tokenizer.convert_ids_to_tokens(tokenizer.encode(token, add_special_tokens=False)[0]))
+                continue
 
     if write_down_top_k:
         return data, data_topk
