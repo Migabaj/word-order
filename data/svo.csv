@@ -1,0 +1,155 @@
+,object-eng,object-jap,object-rus,object-tur,object-zho,phrase-eng,phrase-jap,phrase-rus,phrase-tur,phrase-zho,subject-eng,subject-jap,subject-rus,subject-tur,subject-zho,verb-eng,verb-jap,verb-rus,verb-tur,verb-zho
+0,angle,角度,угол,açıyı,角度,the mathematician measures the angle,数学者は角度を測る,математик измеряет угол,matematikçi açıyı ölçer,数学家测量角度,the mathematician,数学者,математик,matematikçi,数学家,measures,測る,измеряет,ölçer,测量
+1,ant,蟻,муравья,karıncayı,蚂蚁,the spider kills the ant,蜘蛛は蟻を殺す,паук убивает муравья,örümcek karıncayı öldürür,蜘蛛杀死蚂蚁,the spider,蜘蛛,паук,örümcek,蜘蛛,kills,殺す,убивает,öldürür,杀死
+2,apple,リンゴ,яблоко,elmayı,苹果,the boy eats the apple,少年はリンゴを食べる,мальчик ест яблоко,oğlan elmayı yer,男孩吃苹果,the boy,少年,мальчик,oğlan,男孩,eats,食べる,ест,yer,吃
+3,arch,アーチ,арку,kemeri,拱门,the architect builds the arch,建築家はアーチを建てる,архитектор строит арку,mimar kemeri inşa eder,建筑师建造拱门,the architect,建築家,архитектор,mimar,建筑师,builds,建てる,строит,inşa eder,建造
+4,arm,腕,руку,kolu,手臂,the man grabs the arm,男は腕を掴む,мужчина хватает руку,adam kolu tutar,男人抓住手臂,the man,男,мужчина,adam,男人,grabs,掴む,хватает,tutar,抓住
+5,army,軍隊,армию,orduya,军队,the general attacks the army,将軍は軍隊を攻撃する,генерал атакует армию,general orduya saldırır,将军进攻军队,the general,将軍,генерал,general,将军,attacks,攻撃する,атакует,saldırır,进攻
+6,baby,赤ちゃん,ребенка,bebeği,婴儿,the mother holds the baby,母親は赤ちゃんを抱く,мать держит ребенка,anne bebeği tutar,母亲抱着婴儿,the mother,母親,мать,anne,母亲,holds,抱く,держит,tutar,抱着
+7,bag,袋,мешок,çantayı,袋子,the worker fills the bag,労働者は袋を詰める,рабочий наполняет мешок,işçi çantayı doldurur,工人装满袋子,the worker,労働者,рабочий,işçi,工人,fills,詰める,наполняет,doldurur,装满
+8,ball,ボール,мяч,topa,足球,the sportsman kicks the ball,スポーツマンはボールを蹴る,спорстсмен пинает мяч,sporcu topa vurur,运动员踢足球,the sportsman,スポーツマン,спортсмен,sporcu,运动员,kicks,蹴る,пинает,vurur,踢
+9,band,バンド,ленту,bandı,带子,the jogger stretches the band,ジョガーはバンドを伸ばす,бегун растягивает ленту,koşucu bandı gerer,慢跑者拉伸带子,the jogger,ジョガー,бегун,koşucu,慢跑者,stretches,伸ばす,растягивает,gerer,拉伸
+10,basin,洗面器,раковину,lavaboyu,水盆,the janitor cleans the basin,用務員は洗面器を掃除する,уборщик чистит раковину,hademe lavaboyu temizler,看门人清洗水盆,the janitor,用務員,уборщик,hademe,看门人,cleans,掃除する,чистит,temizler,清洗
+11,basket,籠,корзину,sepeti,篮子,the teacher brings the basket,教師は籠を持ってくる,учитель приносит корзину,öğretmen sepeti getirir,老师带来篮子,the teacher,教師,учитель,öğretmen,老师,brings,持ってくる,приносит,getirir,带来
+12,bath,風呂,ванну,banyoyu,浴缸,the person sees the bath,人は風呂を見る,человек видит ванну,kişi banyoyu görür,那人看见浴缸,the person,人,человек,kişi,那人,sees,見る,видит,görür,看见
+13,bed,ベッド,кровать,yatağı,床铺,the woman buys the bed,女はベッドを買う,женщина покупает кровать,kadın yatağı satın alır,女人买下床铺,the woman,女,женщина,kadın,女人,buys,買う,покупает,satın alır,买下
+14,bee,蜂,пчелу,arıyı,蜜蜂,the biologist catches the bee,生物学者は蜂を捕まえる,биолог ловит пчелу,biyolog arıyı yakalar,生物学家捕捉蜜蜂,the biologist,生物学者,биолог,biyolog,生物学家,catches,捕まえる,ловит,yakalar,捕捉
+15,bell,鐘,колокол,zili,铃铛,the man drops the bell,男は鐘を落とす,мужчина роняет колокол,adam zili düşürür,男子掉落铃铛,the man,男,мужчина,adam,男子,drops,落とす,роняет,düşürür,掉落
+16,berry,ベリー,ягоду,meyveyi,浆果,the child swallows the berry,子供はベリーを飲み込む,ребенок глотает ягоду,çocuk meyveyi yutar,孩童吞下浆果,the child,子供,ребенок,çocuk,孩童,swallows,飲み込む,глотает,yutar,吞下
+17,bird,鳥,птицу,kuşa,小鸟,the cat attacks the bird,猫は鳥を襲う,кошка нападает на птицу,kedi kuşa saldırır,猫袭击小鸟,the cat,猫,кошка,kedi,猫,attacks,襲う,нападает,saldırır,袭击
+18,blade,刃,лезвие,bıçağı,刀刃,the blacksmith sharpens the blade,鍛冶屋は刃を研ぐ,кузнец затачивает лезвие,demirci bıçağı biler,铁匠磨利刀刃,the blacksmith,鍛冶屋,кузнец,demirci,铁匠,sharpens,研ぐ,затачивает,biler,磨利
+19,board,板,доску,tahtayı,木板,the artist breaks the board,芸術家は板を割る,художник ломает доску,sanatçı tahtayı kırar,艺术家砸碎木板,the artist,芸術家,художник,sanatçı,艺术家,breaks,割る,ломает,kırar,砸碎
+20,boat,船,лодкой,tekneyi,船只,the sailor steers the boat,船乗りは船を操る,моряк управляет лодкой,denizci tekneyi yönlendirir,水手掌舵船只,the sailor,船乗り,моряк,denizci,水手,steers,操る,управляет,yönlendirir,掌舵
+21,bone,骨,кость,kemiği,骨头,the woman throws the bone,女性は骨を投げる,женщина бросает кость,kadın kemiği atar,女人抛出骨头,the woman,女性,женщина,kadın,女人,throws,投げる,бросает,atar,抛出
+22,book,本,книгу,kitabı,书籍,the man reads the book,男性は本を読む,мужчина читает книгу,adam kitabı okur,男子阅读书籍,the man,男性,мужчина,adam,男子,reads,読む,читает,okur,阅读
+23,bottle,瓶,бутылку,şişeyi,酒瓶,the shopkeeper breaks the bottle,店主は瓶を割る,лавочник разбивает бутылку,dükkan sahibi şişeyi kırar,店主摔碎酒瓶,the shopkeeper,店主,лавочник,dükkan sahibi,店主,breaks,割る,разбивает,kırar,摔碎
+24,box,箱,ящик,kutuyu,包裹,the postman opens the box,郵便配達員は箱を開ける,почтальон открывает ящик,postacı kutuyu açar,邮差开启包裹,the postman,郵便配達員,почтальон,postacı,邮差,opens,開ける,открывает,açar,开启
+25,boy,少年,мальчика,çocuğa,男孩,the teacher teaches the boy,教師は少年を教える,учитель учит мальчика,öğretmen çocuğa ders verir,教师教导男孩,the teacher,教師,учитель,öğretmen,教师,teaches,教える,учит,ders verir,教导
+26,brain,脳,мозг,beyni,大脑,the neurologist examines the brain,神経科医は脳を調べる,невролог исследует мозг,nörolog beyni muayene eder,神经科医生检查大脑,the neurologist,神経科医,невролог,nörolog,神经科医生,examines,調べる,исследует,muayene eder,检查
+27,brake,ブレーキ,тормоз,frene,刹车,the driver pushes the brake,運転手はブレーキを踏む,водитель нажимает на тормоз,şoför frene basar,司机踩下刹车,the driver,運転手,водитель,şoför,司机,pushes,踏む,нажимает,basar,踩下
+28,branch,枝,ветку,dalı,树枝,the owl breaks the branch,フクロウは枝を折る,сова ломает ветку,baykuş dalı kırar,猫头鹰折断树枝,the owl,フクロウ,сова,baykuş,猫头鹰,breaks,折る,ломает,kırar,折断
+29,brick,レンガ,кирпич,tuğlayı,砖块,the activist throws the brick,活動家はレンガを投げる,активист бросает кирпич,aktivist tuğlayı atar,活动家投掷砖块,the activist,活動家,активист,aktivist,活动家,throws,投げる,бросает,atar,投掷
+30,bridge,橋,мост,köprüyü,桥梁,the driver crosses the bridge,運転手は橋を渡る,водитель пересекает мост,şoför köprüyü geçer,司机驶过桥梁,the driver,運転手,водитель,şoför,司机,crosses,渡る,пересекает,geçer,驶过
+31,bucket,バケツ,ведро,kovayı,水桶,the farmer fills the bucket,農夫はバケツを満たす,фермер наполняет ведро,çiftçi kovayı doldurur,农夫装满水桶,the farmer,農夫,фермер,çiftçi,农夫,fills,満たす,наполняет,doldurur,装满
+32,bulb,電球,лампочку,ampulü,灯泡,the electrician screws the bulb,電気技師は電球をねじ込む,электрик вкручивает лампочку,elektrikçi ampulü takar,电工拧紧灯泡,the electrician,電気技師,электрик,elektrikçi,电工,screws,ねじ込む,вкручивает,takar,拧紧
+33,button,ボタン,кнопку,düğmeye,按钮,the conductor presses the button,車掌はボタンを押す,проводник нажимает на кнопку,kondüktör düğmeye basar,列车长按下按钮,the conductor,車掌,проводник,kondüktör,列车长,presses,押す,нажимает,basar,按下
+34,cake,ケーキ,торт,pastayı,蛋糕,the bride cuts the cake,花嫁がケーキを切る,невеста режет торт,gelin pastayı keser,新娘切开蛋糕,the bride,花嫁,невеста,gelin,新娘,cuts,切る,режет,keser,切开
+35,camera,カメラ,фотоаппарат,kamera,相机,the photographer buys the camera,写真家がカメラを買う,фотограф покупает фотоаппарат,fotoğrafçı kamera satın alır,摄影师购买相机,the photographer,写真家,фотограф,fotoğrafçı,摄影师,buys,買う,покупает,satın alır,购买
+36,card,カード,карту,kartı,纸牌,the magician pulls the card,魔術師がカードを引き抜く,фокусник тянет карту,sihirbaz kartı çeker,魔术师抽取纸牌,the magician,魔術師,фокусник,sihirbaz,魔术师,pulls,引き抜く,тянет,çeker,抽取
+37,cart,カート,тележку,arabayı,推车,the woman pushes the cart,女性がカートを押す,женщина толкает тележку,kadın arabayı iter,女子推着推车,the woman,女性,женщина,kadın,女子,pushes,押す,толкает,iter,推着
+38,cat,猫,кошку,kediyi,猫咪,the man calls the cat,男性が猫を呼ぶ,мужчина зовет кошку,adam kediyi çağırır,男子呼唤猫咪,the man,男性,мужчина,adam,男子,calls,呼ぶ,зовет,çağırır,呼唤
+39,chain,鎖,цепь,zinciri,铁链,the dog pulls the chain,犬が鎖を引っ張る,собака тянет цепь,köpek zinciri çeker,狗儿扯动铁链,the dog,犬,собака,köpek,狗儿,pulls,引っ張る,тянет,çeker,扯动
+40,cheese,チーズの香り,сыр,peyniri,奶酪,the chef smells the cheese,シェフはチーズの香りを嗅ぐ,повар нюхает сыр,aşçı peyniri koklar,厨师嗅闻奶酪,the chef,シェフ,повар,aşçı,厨师,smells,嗅ぐ,нюхает,koklar,嗅闻
+41,chest,箱,сундук,sandığı,箱柜,the historian opens the chest,歴史家は箱を開ける,историк открывает сундук,tarihçi sandığı açar,历史学家开启箱柜,the historian,歴史家,историк,tarihçi,历史学家,opens,開ける,открывает,açar,开启
+42,church,教会,церковь,kiliseyi,教堂,the Christian visits the church,キリスト教徒は教会を訪れる,христианин посещает церковь,Hıristiyan kiliseyi ziyaret eder,基督徒造访教堂,the Christian,キリスト教徒,христианин,Hıristiyan,基督徒,visits,訪れる,посещает,ziyaret eder,造访
+43,circle,円,круг,daire,圆圈,the child draws the circle,子供は円を描く,ребенок рисует круг,çocuk daire çizer,孩童描绘圆圈,the child,子供,ребенок,çocuk,孩童,draws,描く,рисует,çizer,描绘
+44,clock,時計,часы,saati,时钟,the engineer fixes the clock,技師は時計を直す,инженер чинит часы,mühendis saati tamir eder,工程师修理时钟,the engineer,技師,инженер,mühendis,工程师,fixes,直す,чинит,tamir eder,修理
+45,cloud,雲,облако,bulutu,云朵,the artist sees the cloud,芸術家は雲を見る,художник видит облако,sanatçı bulutu görür,艺术家凝望云朵,the artist,芸術家,художник,sanatçı,艺术家,sees,見る,видит,görür,凝望
+46,coat,コート,пальто,paltoyu,大衣,the model wears the coat,モデルはコートを着る,модель надевает пальто,manken paltoyu giyer,模特身披大衣,the model,モデル,модель,manken,模特,wears,着る,надевает,giyer,身披
+47,collar,襟,воротник,yakayı,衣领,the man adjusts the collar,男は襟を直す,мужчина поправляет воротник,adam yakayı düzeltir,男子整理衣领,the man,男,мужчина,adam,男子,adjusts,直す,поправляет,düzeltir,整理
+48,comb,櫛,расческу,tarağı,梳子,the boy uses the comb,少年は櫛を使う,мальчик использует расческу,çocuk tarağı kullanır,男孩使用梳子,the boy,少年,мальчик,oğlan,男孩,uses,使う,использует,kullanır,使用
+49,cord,コード,шнур,kabloyu,电线,the electrician pulls the cord,電気技師はコードを引く,электрик тянет шнур,elektrikçi kabloyu çeker,电工拉动电线,the electrician,電気技師,электрик,elektrikçi,电工,pulls,引く,тянет,çeker,拉动
+50,cow,牛,корову,ineği,奶牛,the farmer pets the cow,農夫は牛を撫でる,фермер гладит корову,çiftçi ineği okşar,农夫抚摸奶牛,the farmer,農夫,фермер,çiftçi,农夫,pets,撫でる,гладит,okşar,抚摸
+51,cup,カップ,чашку,bardağı,茶杯,the potter breaks the cup,陶芸家はカップを割る,гончар разбивает чашку,çömlekçi bardağı kırar,陶工摔碎茶杯,the potter,陶芸家,гончар,çömlekçi,陶工,breaks,割る,разбивает,kırar,摔碎
+52,curtain,カーテン,занавеску,perdeyi,窗帘,the person hangs the curtain,人はカーテンを掛ける,человек вешает занавеску,kişi perdeyi asar,那人挂起窗帘,the person,人,человек,kişi,那人,hangs,掛ける,вешает,asar,挂起
+53,cushion,クッション,подушку,yastığı,坐垫,the man lays the cushion,男はクッションを置く,мужчина кладет подушку,adam yastığı yerleştirir,男子铺好坐垫,the man,男,мужчина,adam,男子,lays,置く,кладет,yerleştirir,铺好
+54,dog,犬,собаку,köpeği,狗儿,the florist pets the dog,花屋は犬を撫でる,цветочник гладит собаку,çiçekçi köpeği okşar,花店老板抚摸狗儿,the florist,花屋,цветочник,çiçekçi,花店老板,pets,撫でる,гладит,okşar,抚摸
+55,door,ドア,дверь,kapıyı,房门,the client closes the door,客はドアを閉める,клиент закрывает дверь,müşteri kapıyı kapatır,客户关上房门,the client,客,клиент,müşteri,客户,closes,閉める,закрывает,kapatır,关上
+56,drain,排水溝,сточную,gideri,排水管,the janitor cleans the drain,用務員は排水溝を掃除する,уборщик чистит сточную трубу,hademe gideri temizler,看门人清理排水管,the janitor,用務員,уборщик,hademe,看门人,cleans,掃除する,чистит,temizler,清理
+57,drawer,引き出し,ящик,çekmeceyi,抽屉,the teacher pulls the drawer,教師は引き出しを引く,учитель тянет ящик,öğretmen çekmeceyi çeker,教师拉开抽屉,the teacher,教師,учитель,öğretmen,教师,pulls,引く,тянет,çeker,拉开
+58,dress,ドレス,платье,elbiseyi,裙装,the seamstress sews the dress,裁縫師はドレスを縫う,швея шьет платье,terzi elbiseyi diker,女裁缝缝制裙装,the seamstress,裁縫師,швея,terzi,女裁缝,sews,縫う,шьет,diker,缝制
+59,egg,卵,яйцо,yumurtayı,鸡蛋,the cook fries the egg,料理人は卵を焼く,повар жарит яйцо,aşçı yumurtayı kızartır,厨师煎制鸡蛋,the cook,料理人,повар,aşçı,厨师,fries,焼く,жарит,kızartır,煎制
+60,engine,エンジン,двигатель,motoru,引擎,the driver starts the engine,運転手はエンジンをかける,водитель запускает двигатель,şoför motoru çalıştırır,司机启动引擎,the driver,運転手,водитель,şoför,司机,starts,かける,запускает,çalıştırır,启动
+61,farm,農場,ферму,çiftliği,农庄,the banker rents the farm,銀行家は農場を借りる,банкир сдает ферму в аренду,bankacı çiftliği kiralar,银行家租借农庄,the banker,銀行家,банкир,bankacı,银行家,rents,借りる,сдает,kiralar,租借
+62,feather,羽根,перо,tüyü,羽毛,the man blows the feather,男は羽根を吹く,мужчина дует в перо,adam tüyü üfler,男子吹拂羽毛,the man,男,мужчина,adam,男子,blows,吹く,дует,üfler,吹拂
+63,fish,魚,рыбу,balığı,鱼获,the fisherman catches the fish,漁師は魚を捕まえる,рыбак ловит рыбу,balıkçı balığı yakalar,渔夫捕获鱼获,the fisherman,漁師,рыбак,balıkçı,渔夫,catches,捕まえる,ловит,yakalar,捕获
+64,flag,旗,флагом,bayrağı,旗帜,the general waves the flag,将軍は旗を振る,генерал машет флагом,general bayrağı sallar,将军挥舞旗帜,the general,将軍,генерал,general,将军,waves,振る,машет,sallar,挥舞
+65,floor,床,пол,yeri,地板,the janitor wipes the floor,用務員は床を拭く,уборщик вытирает пол,hademe yeri siler,看门人擦拭地板,the janitor,用務員,уборщик,hademe,看门人,wipes,拭く,вытирает,siler,擦拭
+66,fly,ハエ,муху,sineği,苍蝇,the woman swallows the fly,女性はハエを飲み込む,женщина проглатывает муху,kadın sineği yutar,女子吞下苍蝇,the woman,女性,женщина,kadın,女子,swallows,飲み込む,проглатывает,yutar,吞下
+67,fork,フォーク,вилку,çatalı,餐叉,the chef drops the fork,料理人はフォークを落とす,повар роняет вилку,aşçı çatalı düşürür,主厨掉落餐叉,the chef,料理人,повар,aşçı,主厨,drops,落とす,роняет,düşürür,掉落
+68,frame,額縁,рамку,çerçeveyi,画框,the person hangs the frame,人は額縁を掛ける,человек вешает рамку,kişi çerçeveyi asar,人们悬挂画框,the person,人,человек,kişi,人们,hangs,掛ける,вешает,asar,悬挂
+69,garden,庭,сад,bahçeyi,花园,the homeowner sells the garden,家主は庭を売る,домовладелец продает сад,ev sahibi bahçeyi satar,房主出售花园,the homeowner,家主,домовладелец,ev sahibi,房主,sells,売る,продает,satar,出售
+70,girl,少女,девочку,kızı,女孩,the boy sees the girl,少年は少女を見る,мальчик видит девочку,oğlan kızı görür,男孩遇见女孩,the boy,少年,мальчик,oğlan,男孩,sees,見る,видит,görür,遇见
+71,goat,山羊,козу,keçiyi,山羊,the farmer pets the goat,農夫は山羊を撫でる,фермер гладит козу,çiftçi keçiyi okşar,农夫抚摸山羊,the farmer,農夫,фермер,çiftçi,农夫,pets,撫でる,гладит,okşar,抚摸
+72,gun,銃,пистолет,silahı,枪,the criminal fires the gun,犯罪者は銃を撃つ,преступник стреляет из пистолета,suçlu silahı ateşler,罪犯开枪射击,the criminal,犯罪者,преступник,suçlu,罪犯,fires,撃つ,стреляет,ateşler,开枪射击
+73,hair,髪,волосы,saçı,发,the person dyes the hair,人は髪を染める,человек красит волосы,kişi saçı boyar,那人染发,the person,人,человек,kişi,那人,dyes,染める,красит,boyar,染
+74,hammer,ハンマー,молотком,çekici,锤子,the decorator swings the hammer,装飾業者はハンマーを振るう,декоратор машет молотком,dekoratör çekici sallıyor,装饰师挥动锤子,the decorator,装飾業者,декоратор,dekoratör,装饰师,swings,振るう,машет,sallıyor,挥动
+75,hat,帽子,шляпу,şapkayı,帽子,the woman wears the hat,女性は帽子をかぶる,женщина носит шляпу,kadın şapkayı takıyor,女人戴上帽子,the woman,女性,женщина,kadın,女人,wears,かぶる,носит,takıyor,戴上
+76,hook,釣り針,крючок,kancayı,鱼钩,the fisherman throws the hook,漁師は釣り針を投げる,рыбак закидывает крючок,balıkçı kancayı atıyor,渔夫抛出鱼钩,the fisherman,漁師,рыбак,balıkçı,渔夫,throws,投げる,закидывает,atıyor,抛出
+77,horn,ホルン,рожок,kornayı,号角,the musician blows the horn,音楽家はホルンを吹く,музыкант дует в рожок,müzisyen kornayı çalıyor,音乐家吹响号角,the musician,音楽家,музыкант,müzisyen,音乐家,blows,吹く,дует,çalıyor,吹响
+78,horse,馬,лошадь,atı,马,the knight leads the horse,騎士は馬を導く,рыцарь ведет лошадь,şövalye atı sürüyor,骑士牵着马,the knight,騎士,рыцарь,şövalye,骑士,leads,導く,ведет,sürüyor,牵着
+79,hospital,病院,больницу,hastaneyi,医院,the father visits the hospital,父親は病院を訪れる,отец посещает больницу,baba hastaneyi ziyaret ediyor,父亲探访医院,the father,父親,отец,baba,父亲,visits,訪れる,посещает,ziyaret ediyor,探访
+80,house,家,дом,evi,房屋,the man paints the house,男は家を塗る,мужчина красит дом,adam evi boyuyor,男人粉刷房屋,the man,男,мужчина,adam,男人,paints,塗る,красит,boyuyor,粉刷
+81,island,島,остров,adayı,岛屿,the politician visits the island,政治家が島を訪れる,политик посещает остров,politikacı adayı ziyaret ediyor,政客造访岛屿,the politician,政治家,политик,politikacı,政客,visits,訪れる,посещает,ziyaret ediyor,造访
+82,jewel,宝石,драгоценность,mücevheri,珠宝,the shopkeeper sells the jewel,店主が宝石を売る,лавочник продает драгоценность,dükkan sahibi mücevheri satar,店主售出珠宝,the shopkeeper,店主,лавочник,dükkan sahibi,店主,sells,売る,продает,satar,售出
+83,kettle,やかんに水,чайник,su ısıtıcısını,水壶,the woman fills the kettle,女性がやかんに水を注ぐ,женщина наполняет чайник,kadın su ısıtıcısını doldurur,妇人注满水壶,the woman,女性,женщина,kadın,妇人,fills,注ぐ,наполняет,doldurur,注满
+84,key,鍵,ключ,anahtarı,钥匙,the man uses the key,男性が鍵を使う,мужчина использует ключ,adam anahtarı kullanır,男子使用钥匙,the man,男性,мужчина,adam,男子,uses,使う,использует,kullanır,使用
+85,knife,ナイフ,нож,bıçağı,刀具,the man gets the knife,男性がナイフを手にする,мужчина берет нож,adam bıçağı alır,男子取来刀具,the man,男性,мужчина,adam,男子,gets,手にする,берет,alır,取来
+86,knot,結び目,узел,düğümü,绳结,the sailor ties the knot,船乗りが結び目を作る,моряк завязывает узел,denizci düğümü bağlar,水手系紧绳结,the sailor,船乗り,моряк,denizci,水手,ties,作る,завязывает,bağlar,系紧
+87,leaf,葉,лист,yaprağı,树叶,the squirell rips the leaf,リスが葉を裂く,белка рвет лист,sincap yaprağı yırtar,松鼠撕裂树叶,the squirell,リス,белка,sincap,松鼠,rips,裂く,рвет,yırtar,撕裂
+88,library,図書館,библиотеку,kütüphaneyi,图书馆,the person visits the library,人が図書館を訪れる,человек посещает библиотеку,kişi kütüphaneyi ziyaret eder,访客踏入图书馆,the person,人,человек,kişi,访客,visits,訪れる,посещает,ziyaret eder,踏入
+89,line,線,линию,çizgi,线,the professor draws the line,教授は線を引く,профессор проводит линию,profesör çizgi çizer,教授划线,the professor,教授,профессор,profesör,教授,draws,引く,проводит,çizer,划
+90,lock,錠,замок,kilidi,锁,the locksmith breaks the lock,鍵屋は錠を壊す,слесарь взламывает замок,çilingir kilidi kırar,锁匠撬锁,the locksmith,鍵屋,слесарь,çilingir,锁匠,breaks,壊す,взламывает,kırar,撬
+91,map,地図,карту,haritayı,图,the pirate draws the map,海賊は地図を描く,пират рисует карту,korsan haritayı çizer,海盗绘图,the pirate,海賊,пират,korsan,海盗,draws,描く,рисует,çizer,绘
+92,match,マッチに火,спичку,kibriti,火柴,the child lights the match,子供はマッチに火をつける,ребенок зажигает спичку,çocuk kibriti yakar,孩童点火柴,the child,子供,ребенок,çocuk,孩童,lights,つける,зажигает,yakar,点
+93,monkey,猿,обезьяну,maymunu,猴子,the zookeeper hugs the monkey,動物園の飼育係は猿を抱きしめる,смотритеть зоопарка обнимает обезьяну,hayvanat bahçesi görevlisi maymunu kucaklar,饲养员拥抱猴子,the zookeeper,動物園の飼育係,смотритель зоопарка,hayvanat bahçesi görevlisi,饲养员,hugs,抱きしめる,обнимает,kucaklar,拥抱
+94,moon,月,луну,ayı,月,the person sees the moon,人は月を見る,человек видит луну,kişi ayı görür,人们望月,the person,人,человек,kişi,人们,sees,見る,видит,görür,望
+95,needle,針,иглу,iğneyi,针,the seamstress grabs the needle,裁縫師は針をつかむ,швея берет иглу,terzi iğneyi alır,女裁缝抓针,the seamstress,裁縫師,швея,terzi,女裁缝,grabs,つかむ,берет,alır,抓
+96,net,網,сеть,ağı,网,the fisherman throws the net,漁師は網を投げる,рыбак бросает сеть,balıkçı ağı atar,渔夫撒网,the fisherman,漁師,рыбак,balıkçı,渔夫,throws,投げる,бросает,atar,撒
+97,nut,木の実,орех,cevizi,坚果,the squirrel cracks the nut,リスは木の実を割る,белка раскалывает орех,sincap cevizi kırar,松鼠嗑坚果,the squirrel,リス,белка,sincap,松鼠,cracks,割る,раскалывает,kırar,嗑
+98,orange,オレンジ,апельсин,portakalı,橘子,the monkey eats the orange,猿はオレンジを食べる,обезьяна ест апельсин,maymun portakalı yer,猴子吃橘子,the monkey,猿,обезьяна,maymun,猴子,eats,食べる,ест,yer,吃
+99,oven,オーブン,духовку,fırını,烤箱,the chef preheats the oven,料理人はオーブンを予熱する,повар разогревает духовку,aşçı fırını önceden ısıtır,厨师预热烤箱,the chef,料理人,повар,aşçı,厨师,preheats,予熱する,разогревает,önceden ısıtır,预热
+100,parcel,小包,посылку,paketi,包裹,the thief steals the parcel,泥棒は小包を盗む,вор крадет посылку,hırsız paketi çalar,小偷偷走包裹,the thief,泥棒,вор,hırsız,小偷,steals,盗む,крадет,çalar,偷走
+101,pen,ペン,ручку,kalemi,钢笔,the schoolmate sells the pen,同級生はペンを売る,одноклассник продает ручку,okul arkadaşı kalemi satar,同学卖掉钢笔,the schoolmate,同級生,одноклассник,okul arkadaşı,同学,sells,売る,продает,satar,卖掉
+102,pencil,鉛筆,карандаш,kalemi,铅笔,the secretary breaks the pencil,秘書が鉛筆を折る,секретарь ломает карандаш,sekreter kalemi kırar,秘书折断铅笔,the secretary,秘書,секретарь,sekreter,秘书,breaks,折る,ломает,kırar,折断
+103,picture,絵,картинку,resim,图画,the child draws the picture,子供が絵を描く,ребенок рисует картинку,çocuk resim çizer,孩子画出图画,the child,子供,ребенок,çocuk,孩子,draws,描く,рисует,çizer,画出
+104,pig,豚,свинью,domuzu,猪只,the farmer slaughters the pig,農夫が豚を屠る,фермер забивает свинью,çiftçi domuzu keser,农夫宰杀猪只,the farmer,農夫,фермер,çiftçi,农夫,slaughters,屠る,забивает,keser,宰杀
+105,pin,ピン,булавку,iğneyi,别针,the man buys the pin,男がピンを買う,человек покупает булавку,adam iğneyi satın alır,男子买下别针,the man,男,человек,adam,男子,buys,買う,покупает,satın alır,买下
+106,pipe,パイプ,трубу,boruyu,管道,the plumber cleans the pipe,配管工がパイプを掃除する,сантехник чистит трубу,tesisatçı boruyu temizler,水管工清理管道,the plumber,配管工,сантехник,tesisatçı,水管工,cleans,掃除する,чистит,temizler,清理
+107,plane,飛行機,самолете,uçağı,飞机,the pilot flies the plane,パイロットが飛行機を操縦する,пилот летает на самолете,pilot uçağı uçurur,飞行员驾驶飞机,the pilot,パイロット,пилот,pilot,飞行员,flies,操縦する,летает,uçurur,驾驶
+108,plate,皿,тарелку,tabağı,餐盘,the cook washs the plate,料理人が皿を洗う,повар моет тарелку,aşçı tabağı yıkar,厨师清洗餐盘,the cook,料理人,повар,aşçı,厨师,washs,洗う,моет,yıkar,清洗
+109,plough,鋤,плуг,sabanı,犁具,the boy pulls the plough,少年が鋤を引く,мальчик тянет плуг,oğlan sabanı çeker,男孩拉动犁具,the boy,少年,мальчик,oğlan,男孩,pulls,引く,тянет,çeker,拉动
+110,pocket,ポケット,карман,cebi,口袋,the tailor sews the pocket,仕立て屋がポケットを縫う,портной шьет карман,terzi cebi diker,裁缝缝制口袋,the tailor,仕立て屋,портной,terzi,裁缝,sews,縫う,шьет,diker,缝制
+111,pot,鍋,кастрюлю,tencereyi,陶罐,the teenager drops the pot,十代の少年が鍋を落とす,подросток роняет кастрюлю,genç tencereyi düşürür,少年摔落陶罐,the teenager,十代の少年,подросток,genç,少年,drops,落とす,роняет,düşürür,摔落
+112,potato,ジャガイモ,картошку,patatesi,马铃薯,the man cooks the potato,男がジャガイモを調理する,мужчина варит картошку,adam patatesi pişirir,男子烹煮马铃薯,the man,男,мужчина,adam,男子,cooks,調理する,варит,pişirir,烹煮
+113,rail,レール,рельсы,rayı,铁轨,the construction worker builds the rail,建設作業員がレールを建設する,строитель строит рельсы,inşaat işçisi rayı inşa eder,建筑工铺设铁轨,the construction worker,建設作業員,строитель,inşaat işçisi,建筑工,builds,建設する,строит,inşa eder,铺设
+114,rat,ネズミ,крысу,fareyi,老鼠,the owl sees the rat,フクロウがネズミを見つける,сова видит крысу,baykuş fareyi görür,猫头鹰窥见老鼠,the owl,フクロウ,сова,baykuş,猫头鹰,sees,見つける,видит,görür,窥见
+115,receipt,領収書,чек,fişi,小票,the cashier prints the receipt,レジ係が領収書を印刷する,кассир печатает чек,kasiyer fişi yazdırır,收银员打印小票,the cashier,レジ係,кассир,kasiyer,收银员,prints,印刷する,печатает,yazdırır,打印
+116,ring,指輪,кольцо,yüzüğü,戒指,the jeweler makes the ring,宝石商が指輪を作る,ювелир делает кольцо,kuyumcu yüzüğü yapar,珠宝匠制作戒指,the jeweler,宝石商,ювелир,kuyumcu,珠宝匠,makes,作る,делает,yapar,制作
+117,rod,釣り竿,удочку,oltayı,钓竿,the fisherman buys the rod,漁師が釣り竿を買う,рыбак покупает удочку,balıkçı oltayı satın alır,渔夫购置钓竿,the fisherman,漁師,рыбак,balıkçı,渔夫,buys,買う,покупает,satın alır,购置
+118,roof,屋根,крышу,çatıyı,屋顶,the man cleans the roof,男が屋根を掃除する,мужчина чистит крышу,adam çatıyı temizler,男子清理屋顶,the man,男,мужчина,adam,男子,cleans,掃除する,чистит,temizler,清理
+119,root,根,корень,kökü,根茎,the botanist cuts the root,植物学者が根を切る,ботаник режет корень,botanikçi kökü keser,植物学家切割根茎,the botanist,植物学者,ботаник,botanikçi,植物学家,cuts,切る,режет,keser,切割
+120,school,学校,школу,okulu,学校,the man compliments the school,男が学校を褒める,мужчина хвалит школу,adam okulu övür,男子称赞学校,the man,男,мужчина,adam,男子,compliments,褒める,хвалит,övür,称赞
+121,scissors,ハサミ,ножницы,makası,剪刀,the teacher takes the scissors,教師がハサミを取る,учитель берет ножницы,öğretmen makası alır,教师拿起剪刀,the teacher,教師,учитель,öğretmen,教师,takes,取る,берет,alır,拿起
+122,screw,ネジ,винт,vidayı,螺丝,the mechanic uses the screw,整備士がネジを使う,механик использует винт,tamirci vidayı kullanır,机械师拧螺丝,the mechanic,整備士,механик,mekanikçi,机械师,uses,使う,использует,llanır,拧
+123,seed,種,семена,tohum,种子,the gardener plants the seed,庭師は種を蒔く,садовник сажает семена,bahçıvan tohum ekilir,园丁种种子,the gardener,庭師,садовник,bahçıvan,园丁,plants,蒔く,сажает,ekilir,种
+124,sheep,羊,овец,koyunları,羊毛,the farmer shears the sheep,農夫は羊を刈る,фермер стрижет овец,çiftçi koyunları kırkılır,农夫剪羊毛,the farmer,農夫,фермер,çiftçi,农夫,shears,刈る,стрижет,kırkılır,剪
+125,shelf,棚,полку,raf,书架,the man builds the shelf,男は棚を作る,мужчина строит полку,adam raf yapar,男人搭书架,the man,男,мужчина,adam,男人,builds,作る,строит,yapar,搭
+126,ship,船に,корабль,gemiye,船只,the pirate boards the ship,海賊は船に上がる,пират поднимается на корабль,korsan gemiye çıkar,海盗登船只,the pirate,海賊,пират,korsan,海盗,boards,上がる,поднимается,çıkar,登
+127,shirt,シャツにアイロン,рубашку,gömleği,衬衫,the man irons the shirt,男はシャツにアイロンをかける,мужчина гладит рубашку,adam gömleği ütüler,男人熨衬衫,the man,男,мужчина,adam,男人,irons,かける,гладит,ütüler,熨
+128,shoe,靴,туфлю,ayakkabıyı,鞋子,the child throws the shoe,子供は靴を投げる,ребенок бросает туфлю,çocuk ayakkabıyı atar,孩童扔鞋子,the child,子供,ребенок,çocuk,孩童,throws,投げる,бросает,atar,扔
+129,skirt,スカート,юбку,eteği,裙子,the tailor sews the skirt,仕立て屋はスカートを縫う,портной шьет юбку,terzi eteği diker,裁缝缝裙子,the tailor,仕立て屋,портной,terzi,裁缝,sews,縫う,шьет,diker,缝
+130,snake,蛇,змею,yılanı,蛇,the bird kills the snake,鳥は蛇を殺す,птица убивает змею,kuş yılanı öldürür,鸟儿杀蛇,the bird,鳥,птица,kuş,鸟儿,kills,殺す,убивает,öldürür,杀
+131,spade,鍬,лопату,küreği,锹柄,the gardener breaks the spade,庭師は鍬を折る,садовник ломает лопату,bahçıvan küreği kırar,园丁折锹柄,the gardener,庭師,садовник,bahçıvan,园丁,breaks,折る,ломает,kırar,折
+132,sponge,スポンジ,губку,süngeri,海绵,the woman squeezes the sponge,女はスポンジを絞る,женщина выжимает губку,kadın süngeri sıkar,女人拧海绵,the woman,女,женщина,kadın,女人,squeezes,絞る,выжимает,sıkar,拧
+133,spoon,スプーン,ложку,kaşığı,汤匙,the kid licks the spoon,子供がスプーンを舐める,ребенок облизывает ложку,çocuk kaşığı yalar,孩童舔舐汤匙,the kid,子供,ребенок,çocuk,孩童,licks,舐める,облизывает,yalar,舔舐
+134,square,正方形,квадрат,kareyi,方格,the mathematician draws the square,数学者が正方形を描く,математик рисует квадрат,matematikçi kareyi çizer,数学家绘制方格,the mathematician,数学者,математик,matematikçi,数学家,draws,描く,рисует,çizer,绘制
+135,stamp,切手,марку,pul,邮票,the collector buys the stamp,収集家が切手を買う,коллекционер покупает марку,koleksiyoncu pul satın alır,收藏家购入邮票,the collector,収集家,коллекционер,koleksiyoncu,收藏家,buys,買う,покупает,satın alır,购入
+136,star,星,звезду,yıldızı,星辰,the scientist hates the star,科学者が星を憎む,ученый ненавидит звезду,bilim adamı yıldızı sevmez,科学家厌恶星辰,the scientist,科学者,ученый,bilim adamı,科学家,hates,憎む,ненавидит,sevmez,厌恶
+137,stick,棒,палку,sopayı,木棍,the child throws the stick,子供が棒を投げる,ребенок бросает палку,çocuk sopayı atar,孩童抛掷木棍,the child,子供,ребенок,çocuk,孩童,throws,投げる,бросает,atar,抛掷
+138,street,通り,улицу,caddeyi,街道,the mayor builds the street,市長が通りを作る,мэр строит улицу,belediye başkanı caddeyi inşa eder,市长修筑街道,the mayor,市長,мэр,belediye başkanı,市长,builds,作る,строит,inşa eder,修筑
+139,sun,太陽,солнце,güneşi,朝阳,the woman sees the sun,女性が太陽を見る,женщина видит солнце,kadın güneşi görür,妇人凝望朝阳,the woman,女性,женщина,kadın,妇人,sees,見る,видит,görür,凝望
+140,table,食卓,стол,masayı,餐桌,the host sets the table,主人は食卓を準備する,хозяин накрывает стол,ev sahibi masayı hazırlar,主人摆设餐桌,the host,主人,хозяин,ev sahibi,主人,sets,準備する,накрывает,hazırlar,摆设
+141,thread,糸,нитку,ipliği,线头,the seamstress rips the thread,裁縫師は糸を切る,швея рвет нитку,terzi ipliği koparır,缝纫女拆解线头,the seamstress,裁縫師,швея,terzi,缝纫女,rips,切る,рвет,koparır,拆解
+142,ticket,切符,билет,bilet,车票,the traveller buys the ticket,旅人は切符を買う,путешественник покупает билет,gezgin bilet satın alır,旅人购置车票,the traveller,旅人,путешественник,gezgin,旅人,buys,買う,покупает,satın alır,购置
+143,town,町,город,şehri,城镇,the student chooses the town,学生は町を選ぶ,студент выбирает город,öğrenci şehri seçer,学生选择城镇,the student,学生,студент,öğrenci,学生,chooses,選ぶ,выбирает,seçer,选择
+144,train,列車に,поезд,trene,列车,the passenger boards the train,乗客は列車に乗る,пассажир садится в поезд,yolcu trene biner,乘客登上列车,the passenger,乗客,пассажир,yolcu,乘客,boards,乗る,садится,biner,登上
+145,tray,トレイ,поднос,tepsiyi,托盘,the waiter drops the tray,給仕はトレイを落とす,официант роняет поднос,garson tepsiyi düşürür,侍者打翻托盘,the waiter,給仕,официант,garson,侍者,drops,落とす,роняет,düşürür,打翻
+146,tree,木,дерево,ağacı,树木,the lumberjack cuts the tree,木こりは木を切る,лесоруб рубит дерево,oduncu ağacı keser,伐木工砍伐树木,the lumberjack,木こり,лесоруб,oduncu,伐木工,cuts,切る,рубит,keser,砍伐
+147,trousers,ズボン,брюки,pantolonunu,长裤,the boy rips the trousers,少年はズボンを破る,мальчик рвет брюки,oğlan pantolonunu yırtar,男孩撕裂长裤,the boy,少年,мальчик,oğlan,男孩,rips,破る,рвет,yırtar,撕裂
+148,umbrella,傘,зонтик,şemsiyeyi,雨伞,the man opens the umbrella,男は傘を開く,мужчина открывает зонтик,adam şemsiyeyi açar,男人撑开雨伞,the man,男,мужчина,adam,男人,opens,開く,открывает,açar,撑开
+149,wall,壁,стену,duvara,墙,the man punches the wall,男は壁を殴る,мужчина бьет стену,adam duvara yumruk atar,男人捶墙,the man,男,мужчина,adam,男人,punches,殴る,бьет,yumruk atar,捶
+150,watch,時計,часы,saati,表,the mechanic fixes the watch,整備士は時計を直す,механик чинит часы,tamirci saati tamir eder,修理工修表,the mechanic,整備士,механик,tamirci,修理工,fixes,直す,чинит,tamir eder,修
+151,whip,鞭,кнутом,kırbacı,鞭,the man swings the whip,男は鞭を振るう,мужчина размахивает кнутом,adam kırbacı sallarsa,男人挥鞭,the man,男,мужчина,adam,男人,swings,振るう,размахивает,sallarsa,挥
+152,whistle,笛,свисток,düdüğü,哨,the coach blows the whistle,コーチは笛を吹く,тренер свистит в свисток,koç düdüğü çalar,教练吹哨,the coach,コーチ,тренер,koç,教练,blows,吹く,свистит,çalar,吹
+153,window,窓,окно,pencereyi,窗,the woman closes the window,女は窓を閉める,женщина закрывает окно,kadın pencereyi kapatır,女人关窗,the woman,女,женщина,kadın,女人,closes,閉める,закрывает,kapatır,关
