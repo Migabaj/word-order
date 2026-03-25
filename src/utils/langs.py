@@ -16,6 +16,7 @@ iso2language = {
     "ara": "العربية",
     "vie": "Tiếng Việt",
     "pol": "Polski",
+    "jap": "日本語"
 }
 
 iso2language_eng = {
@@ -30,5 +31,57 @@ iso2language_eng = {
     "ned": "Dutch",
     "ara": "Arabic",
     "vie": "Vietnamese",
-    "pol": "Polish"
+    "pol": "Polish",
+    "jap": "Japanese"
+}
+
+start_with_space = {
+    "eng": True,
+    "fre": True,
+    "rus": True,
+    "ger": True,
+    "spa": True,
+    "ita": True,
+    "zho": False,
+    "tur": True,
+    "ned": True,
+    "vie": True,
+    "pol": True,
+    "jap": False
+}
+
+LANG2S = {
+    "svo": {
+        "eng": "verb",
+        "zho": "verb",
+        "rus": "verb",
+        "tur": "object",
+        "jap": "object",
+    },
+    "modal-verbs": {
+        "eng": "modal",
+        "zho": "modal",
+        "tur": "verb",
+        "ger": "modal"
+    },
+    "noun-adj": {
+        "eng": "adj",
+        "ger": "adj",
+        "rus": "adj",
+        "zho": "adj",
+        "ned": "adj",
+        "fre": "noun",
+        "ita": "noun",
+        "vie": "noun",
+    },
+    "noun-adj-complete": {
+        "eng": "adj",
+        "ger": "adj",
+        "rus": "adj",
+        "zho": "adj",
+        "ned": "adj",
+        "fre": "noun",
+        "ita": "noun",
+        "vie": "noun",
+    }
 }
