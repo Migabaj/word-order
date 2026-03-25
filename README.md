@@ -2,6 +2,8 @@ This is the code that was used to run our experiments.
 
 The `src/` directory contains the "building block" code used for running experiments.
 
+**NB:** There was a need to add another module specifically for Aya in pyvene, which is added in [this fork repository](https://github.com/Migabaj/pyvene). This is the pyvene version that is used in these experiments.
+
 ## LogitLens
 
 The scripts for our LogitLens experiments are in the `notebooks/logit_attribution` directory.
