@@ -119,6 +119,20 @@ def load_eurollm(
     ).to(device)
     return model, tokenizer
 
+def load_aya_expanse(
+    cache_dir: Optional[str] = None
+):
+    device = get_device()
+    tokenizer = AutoTokenizer.from_pretrained(
+        "CohereLabs/aya-expanse-8b", cache_dir=cache_dir
+    )
+    model = AutoModelForCausalLM.from_pretrained(
+        "CohereLabs/aya-expanse-8b",
+        torch_dtype=torch.float32,
+        cache_dir=cache_dir,
+    ).to(device)
+    return model, tokenizer
+
 class ModelWrapper(nn.Module):
     """Wrapper for analyzing LLMs' activations
 
@@ -413,6 +427,37 @@ class EuroLLMWrapper(ModelWrapper):
             else:
                 # print("Layer hidden:", h)
                 # print("Layer hidden:", h.shape)
+                normed = self.model.model.norm(h)
+            l = torch.matmul(self.model.lm_head.weight, normed.T)
+            logits.append(l)
+        return logits
+
+
+class AyaExpanseWrapper(ModelWrapper):
+    """Wrapper for the Aya-Expanse model."""
+    def __init__(self, model: AutoModelForCausalLM, tokenizer: AutoTokenizer):
+        super().__init__(model, tokenizer)
+        self.num_layers = len(self.model.model.layers)
+
+    def layer_decode(self, hidden_states: torch.Tensor) -> List[torch.Tensor]:
+        """Project hidden states onto the vocab.
+
+        :param hidden_states: Model's hidden states of shape
+            \ :math:`(N_L, b, d_v, d_h)`\, where
+
+                - \ :math:`N_L`\: number of layers
+                - \ :math:`b`\: batch size
+                - \ :math:`d_v`\: vocab size
+                - \ :math:`d_h`\: dimensionality of hidden states
+        :return: List of logits, i.e. model's hidden states projected onto its vocabulary.
+            Each list element is a one-dimensional tensor of length \ :math:`d_v`\
+        """
+        logits = []
+        for i, h in enumerate(hidden_states):
+            h = h[:, -1, :]  # (batch, num tokens, embedding size) take the last token
+            if i == len(hidden_states) - 1:
+                normed = h  # ln_f would already have been applied
+            else:
                 normed = self.model.model.norm(h)
             l = torch.matmul(self.model.lm_head.weight, normed.T)
             logits.append(l)
