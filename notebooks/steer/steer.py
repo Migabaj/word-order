@@ -8,8 +8,8 @@ from huggingface_hub import login
 
 from create_datasets.parallel_dataset import ParallelDataset, create_parallel_dataset
 from prompting.intervene import collect_mean_activation, steer
-from collect_mean_activations import create_parallel_dataset
 from utils.model_args import model_to_short, model_to_nounadj_head
+from utils.langs import start_with_space
 
 def get_args():
     parser = argparse.ArgumentParser(description="Steering experiment runner")
@@ -32,6 +32,19 @@ def get_args():
         type=int,
         default=None,
         help="Head index for attention head"
+    )
+
+    parser.add_argument(
+        "--sentences-src-prefix",
+        type=str,
+        default="phrase",
+        help="Prefix for source sentences"
+    )
+    parser.add_argument(
+        "--sentences-tgt-prefix",
+        type=str,
+        default="phrase",
+        help="Prefix for target sentences"
     )
     
     # Language arguments
@@ -103,10 +116,28 @@ def get_args():
         help="HuggingFace API token"
     )
     parser.add_argument(
-        "--start-with-space",
+        "--start-with-space-base",
         type=bool,
         default=True,
-        help="Whether to prepend space to tokens"
+        help="Whether to prepend space to tokens in base language"
+    )
+    parser.add_argument(
+        "--start-with-space-plant",
+        type=bool,
+        default=True,
+        help="Whether to prepend space to tokens in plant language"
+    )
+    parser.add_argument(
+        "--shot-data-src-prefix",
+        type=str,
+        default="phrase",
+        help="Prefix for source sentences in few-shot examples"
+    )
+    parser.add_argument(
+        "--shot-data-tgt-prefix",
+        type=str,
+        default="phrase",
+        help="Prefix for target sentences in few-shot examples"
     )
     
     args = vars(parser.parse_args())
@@ -123,21 +154,24 @@ def variable_setup():
     # set up data
     data = []
 
-def get_tokentype2token(tokenizer, df_row, tgt_lang, pos_prefixes, start_with_space):
+def get_tokentype2token(tokenizer, df_row, tgt_lang_base, tgt_lang_plant, pos_prefixes, start_with_space_base, start_with_space_plant):
     tokentype2token = {}
-    for S in pos_prefixes:
-        token_text = df_row[f'{S}-{tgt_lang}']
-        if start_with_space:
-            token_text = " "+token_text
-        tokentype2token[f"{S}-{tgt_lang}"] = tokenizer(token_text, add_special_tokens=False).input_ids[0]
+    for lang in [tgt_lang_base, tgt_lang_plant]:
+        for S in pos_prefixes:
+            token_text = df_row[f'{S}-{lang}']
+            if lang == tgt_lang_base and start_with_space_base:
+                token_text = " "+token_text
+            elif lang == tgt_lang_plant and start_with_space_plant:
+                token_text = " "+token_text
+            tokentype2token[f"{S}-{lang}"] = tokenizer(token_text, add_special_tokens=False).input_ids[0]
     return tokentype2token
 
 def get_base_and_plant_probs(base_output, plant_output, tokentype2token):
     base_logits = base_output.logits[0, -1]
     plant_logits = plant_output.logits[0, -1]
-    base_probs = sm(base_logits[[tok for _, tok in sorted(tokentype2token.items())]])
-    plant_probs = sm(plant_logits[[tok for _, tok in sorted(tokentype2token.items())]])
-    return base_probs, plant_probs
+    base_probs = sm(base_logits)[[tok for _, tok in sorted(tokentype2token.items())]]
+    plant_probs = sm(plant_logits)[[tok for _, tok in sorted(tokentype2token.items())]]
+    return base_probs, plant_probs, base_logits, plant_logits
 
 def run_experiment(
     model,
@@ -152,7 +186,8 @@ def run_experiment(
     pos_prefixes=["verb", "obj"],
     shot_data_src_prefix="phrase",
     shot_data_tgt_prefix="phrase",
-    start_with_space=True,
+    start_with_space_base=True,
+    start_with_space_plant=True,
     oneshot_template=None,
     last_template=None,
     num_shots=1,
@@ -173,11 +208,11 @@ def run_experiment(
     print(base_prompts[0])
 
     for row_i, row in base_dataset.df.iterrows():
-        tokentype2token = get_tokentype2token(tokenizer, row, tgt_lang, pos_prefixes, start_with_space)
+        tokentype2token = get_tokentype2token(tokenizer, row, tgt_lang, tgt_lang_plant, pos_prefixes, start_with_space_base, start_with_space_plant)
 
         prompt_base = tokenizer(base_prompts[row_i], return_tensors="pt").to(device)
         base_out, cf_out = steer(model, tokenizer, prompt_base, mean_act_source, "head_attention_value_output", layer_i=layer_i, head_i=head_i)
-        base_probs, plant_probs = get_base_and_plant_probs(base_out, cf_out, tokentype2token)
+        base_probs, plant_probs, base_logits, plant_logits = get_base_and_plant_probs(base_out, cf_out, tokentype2token)
 
         for token_type_i, (token_type, token) in enumerate(sorted(tokentype2token.items())):
             data.append(
@@ -187,6 +222,8 @@ def run_experiment(
                     "token": tokenizer.decode(token),
                     "prob_base": base_probs[token_type_i].item(),
                     "prob_plant": plant_probs[token_type_i].item(),
+                    "logit_base": base_logits[token_type_i].item(),
+                    "logit_plant": plant_logits[token_type_i].item(),
                     "type": "head_attention_value_output",
                 }
             )
@@ -212,7 +249,13 @@ def main():
     oneshot_template = args["oneshot_template"]
     last_template = args["last_template"]
     num_shots = args["num_shots"]
-    start_with_space = args["start_with_space"]
+    start_with_space_base = args["start_with_space_base"]
+    start_with_space_plant = args["start_with_space_plant"]
+
+    sentence_src_prefix = args["sentences_src_prefix"]
+    sentence_tgt_prefix = args["sentences_tgt_prefix"]
+    shot_data_src_prefix = args["shot_data_src_prefix"]
+    shot_data_tgt_prefix = args["shot_data_tgt_prefix"]
 
     model_short = model_to_short[model_id]
     layer = args["layer"] if args["layer"] is not None else model_to_nounadj_head[model_id][0]
@@ -238,8 +281,8 @@ def main():
             df,
             src_lang,
             tgt_lang,
-            "phrase",
-            "phrase_cutoff_after_subject",
+            sentence_src_prefix,
+            sentence_tgt_prefix,
             oneshot_template=oneshot_template,
             last_prompt_template=last_template,
             num_shots=num_shots,
@@ -251,8 +294,13 @@ def main():
         for tgt_lang_plant in langs:
             # set up variables
             save_path = f"output/steer/probs/{experiment}_{model_short}_{src_lang}-{tgt_lang}_{src_lang_plant}-{tgt_lang_plant}_layer{layer}_head{head}.csv"
+            if os.path.exists(save_path):
+                print(f"Already have results for {src_lang} -> {tgt_lang} with plant {tgt_lang_plant}, skipping...")
+                continue
             mean_act_filepath = f"output/activations/{experiment}_{model_short}_{src_lang_plant}-{tgt_lang_plant}_layer{layer}_head{head}.pt"
             mean_act = torch.load(mean_act_filepath)
+            start_with_space_base = start_with_space[tgt_lang]
+            start_with_space_plant = start_with_space[tgt_lang_plant]
 
             # run experiment
             run_experiment(
@@ -269,7 +317,10 @@ def main():
                 oneshot_template=oneshot_template,
                 last_template=last_template,
                 num_shots=num_shots,
-                start_with_space=start_with_space,
+                shot_data_src_prefix=shot_data_src_prefix,
+                shot_data_tgt_prefix=shot_data_tgt_prefix,
+                start_with_space_base=start_with_space_base,
+                start_with_space_plant=start_with_space_plant,
             )
     
 if __name__ == "__main__":
