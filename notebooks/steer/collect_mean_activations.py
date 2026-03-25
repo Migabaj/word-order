@@ -87,11 +87,45 @@ def get_args():
         default="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",
         help="HuggingFace API token"
     )
+
+    parser.add_argument(
+        "--save-path",
+        type=str,
+        default="/scratch/msonkin/word-order-thesis/activations/mean_act.pt",
+        help="Path to save mean activations"
+    )
+
+    parser.add_argument(
+        "--sentences-src-prefix",
+        type=str,
+        default="phrase",
+        help="Prefix for source sentences"
+    )
+    parser.add_argument(
+        "--sentences-tgt-prefix",
+        type=str,
+        default="phrase",
+        help="Prefix for target sentences"
+    )
+
+    parser.add_argument(
+        "--shot-data-src-prefix",
+        type=str,
+        default="phrase",
+        help="Prefix for source sentences in shot data"
+    )
+    parser.add_argument(
+        "--shot-data-tgt-prefix",
+        type=str,
+        default="phrase",
+        help="Prefix for target sentences in shot data"
+    )
     
     args = vars(parser.parse_args())
     return args
 
 def main():
+    print("Hello! This is the steering experiment runner.")
     args = get_args()
 
     login(args["hf_token"])
@@ -108,6 +142,12 @@ def main():
     oneshot_template = args["oneshot_template"]
     last_template = args["last_template"]
     num_shots = args["num_shots"]
+    save_path = args["save_path"]
+
+    sentence_src_prefix = args["sentences_src_prefix"]
+    sentence_tgt_prefix = args["sentences_tgt_prefix"]
+    shot_data_src_prefix = args["shot_data_src_prefix"]
+    shot_data_tgt_prefix = args["shot_data_tgt_prefix"]
 
     dataframe = pd.read_csv(datapath)
 
@@ -124,23 +164,32 @@ def main():
     with tqdm(total=len(langs)**2) as pbar:
         for src_lang in langs:
             for tgt_lang in langs:
-                parallel_dataset = create_parallel_dataset(
+                print(f"Processing {src_lang} -> {tgt_lang}...", flush=True)
+                if os.path.exists(save_path.format(model_short=model_short, src_lang=src_lang, tgt_lang=tgt_lang, layer=layer, head=head)):
+                    print(f"Already have activations for {src_lang} -> {tgt_lang}, skipping...")
+                    pbar.update(1)
+                    continue
+                parallel_dataset, parallel_prompts = create_parallel_dataset(
                     model_id,
                     dataframe,
                     src_lang,
                     tgt_lang,
-                    "phrase",
-                    "phrase_cutoff_after_subject",
+                    sentence_src_prefix,
+                    sentence_tgt_prefix,
                     oneshot_template=oneshot_template,
                     last_prompt_template=last_template,
                     num_shots=num_shots,
                     sample_size=sample_size,
                     random_seed=42,
+                    return_prompts=True,
+                    shot_data_src_prefix=shot_data_src_prefix,
+                    shot_data_tgt_prefix=shot_data_tgt_prefix,
                     )
+                print(parallel_prompts[0])
                 prompts = parallel_dataset.prompts_to_tokens()
                 prompts = [tokens.to(device) for tokens in prompts]
-                print(prompts[0])
-                print(tokenizer.decode(prompts[0]['input_ids'][0]))
+                # print(prompts[0])
+                # print(tokenizer.decode(prompts[0]['input_ids'][0]))
                 mean_act = collect_mean_activation(
                     model,
                     tokenizer,
@@ -150,9 +199,7 @@ def main():
                     head_i=head,
                     unit="h.pos"
                 )
-
-                filename = f"output/activations/{experiment}_{model_short}_{src_lang}-{tgt_lang}_layer{layer}_head{head}.pt"
-                torch.save(mean_act, filename)
+                torch.save(mean_act, save_path.format(model_short=model_short, src_lang=src_lang, tgt_lang=tgt_lang, layer=layer, head=head))
 
                 torch.cuda.empty_cache()
                 pbar.update(1)
