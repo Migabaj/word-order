@@ -7,8 +7,9 @@ import itertools
 import subprocess
 import pandas as pd
 from tqdm import tqdm
-from transformers import AutoModelForCausalLM, AutoTokenizer
 from huggingface_hub import login
+from torch.nn import functional as F
+from transformers import AutoModelForCausalLM, AutoTokenizer
 
 from create_datasets.parallel_dataset import ParallelDataset, create_parallel_dataset
 from prompting.intervene import collect_mean_activation, steer
@@ -20,169 +21,50 @@ def get_args():
     parser = argparse.ArgumentParser(description="Steering experiment runner")
     
     # Model arguments
-    parser.add_argument(
-        "--model-id",
-        type=str,
-        default="meta-llama/Meta-Llama-3-8B",
-        help="Model ID from HuggingFace"
-    )
-
+    parser.add_argument("--model-id",type=str,default="meta-llama/Meta-Llama-3-8B",help="Model ID from HuggingFace")
     
     # Intervention type
-    parser.add_argument(
-        "--component",
-        type=str,
-        default="block_output",
-        help="Component to intervene on"
-    )
+    parser.add_argument("--component",type=str,default="block_output",help="Component to intervene on")
     
     # Language arguments
-    parser.add_argument(
-        "--src-lang-base",
-        type=str,
-        default=None,
-        help="Source language (Base)"
-    )
-    parser.add_argument(
-        "--tgt-lang-base",
-        type=str,
-        default=None,
-        help="Target language (Base)"
-    )
-    parser.add_argument(
-        "--src-lang-plant",
-        type=str,
-        default=None,
-        help="Source language (Plant)"
-    )
-    parser.add_argument(
-        "--tgt-lang-plant",
-        type=str,
-        default=None,
-        help="Target language (Plant)"
-    )
+    parser.add_argument("--src-lang-base", type=str, default=None, help="Source language (Base)")
+    parser.add_argument("--tgt-lang-base", type=str, default=None, help="Target language (Base)")
+    parser.add_argument("--src-lang-plant", type=str, default=None, help="Source language (Plant)")
+    parser.add_argument("--tgt-lang-plant", type=str, default=None, help="Target language (Plant)")
     
     # Data
-    parser.add_argument(
-        "--datapath",
-        type=str,
-        help="Path to dataset CSV"
-    )
-
+    parser.add_argument("--datapath", type=str, help="Path to dataset CSV")
     # Cache
-    parser.add_argument(
-        "--cache-dir",
-        type=str,
-        default="/scratch/msonkin/word-order-thesis/cache/",
-        help="HuggingFace cache directory"
-    )
-
+    parser.add_argument("--cache-dir", type=str, default="/scratch/msonkin/word-order-thesis/cache/", help="HuggingFace cache directory")
     # Sample size
-    parser.add_argument(
-        "--sample-size",
-        type=int,
-        default=199,
-        help="Number of samples to use from dataset"
-    )
-    
+    parser.add_argument("--sample-size", type=int, default=199, help="Number of samples to use from dataset")
     # POS tags
-    parser.add_argument(
-        "--pos-prefixes",
-        type=str,
-        nargs="+",
-        help="POS tag prefixes to use"
-    )
-    
+    parser.add_argument("--pos-prefixes", type=str, nargs="+", help="POS tag prefixes to use")
     # Prompting arguments
-    parser.add_argument(
-        "--oneshot-template",
-        type=str,
-        default="{lang_src}: \"{sentence_src}\" - {lang_tgt}: \"{sentence_tgt}\"",
-        help="One-shot prompt template"
-    )
-    parser.add_argument(
-        "--last-template",
-        type=str,
-        default="{lang_src}: \"{sentence_src}\" - {lang_tgt}: \"{sentence_tgt}",
-        help="Last prompt template (without closing quote)"
-    )
-    parser.add_argument(
-        "--num-shots",
-        type=int,
-        default=1,
-        help="Number of shots for few-shot learning"
-    )
+    parser.add_argument("--oneshot-template", type=str, default="{lang_src}: \"{sentence_src}\" - {lang_tgt}: \"{sentence_tgt}\"", help="One-shot prompt template")
+    parser.add_argument("--last-template", type=str, default="{lang_src}: \"{sentence_src}\" - {lang_tgt}: \"{sentence_tgt}", help="Last prompt template (without closing quote)")
+    parser.add_argument("--num-shots",type=int,default=1,help="Number of shots for few-shot learning")
     
-    parser.add_argument(
-        "--hf-token",
-        type=str,
-        default=None,
-        help="HuggingFace API token"
-    )
-    parser.add_argument(
-        "--start-with-space-base",
-        action="store_true",
-        help="Whether to prepend space to tokens"
-    )
-    parser.add_argument(
-        "--start-with-space-plant",
-        action="store_true",
-        help="Whether to prepend space to tokens"
-    )
+    parser.add_argument("--hf-token",type=str,default=None,help="HuggingFace API token")
+    parser.add_argument("--start-with-space-base",action="store_true",help="Whether to prepend space to tokens")
+    parser.add_argument("--start-with-space-plant",action="store_true",help="Whether to prepend space to tokens")
     
-    parser.add_argument(
-        "--sentences-src-prefix",
-        type=str,
-        default="phrase",
-        help="Prefix for source sentences"
-    )
-    parser.add_argument(
-        "--sentences-tgt-prefix",
-        type=str,
-        default="phrase",
-        help="Prefix for target sentences"
-    )
-    parser.add_argument(
-        "--shot-data-src-prefix",
-        type=str,
-        default="phrase",
-        help="Prefix for source sentences in shot data"
-    )
-    parser.add_argument(
-        "--shot-data-tgt-prefix",
-        type=str,
-        default="phrase",
-        help="Prefix for target sentences in shot data"
-    )
+    # Phrase prefixes
+    parser.add_argument("--sentences-src-prefix",type=str,default="phrase",help="Prefix for source sentences")
+    parser.add_argument("--sentences-tgt-prefix",type=str,default="phrase",help="Prefix for target sentences")
+    parser.add_argument("--shot-data-src-prefix",type=str,default="phrase",help="Prefix for source sentences in shot data")
+    parser.add_argument("--shot-data-tgt-prefix",type=str,default="phrase",help="Prefix for target sentences in shot data")
 
-    parser.add_argument(
-        "--save-path",
-        type=str,
-        help="Path to save probabilities"
-    )
+    parser.add_argument("--save-path",type=str,help="Path to save probabilities")
 
     # edge case
     # TODO: clunky
-    parser.add_argument(
-        "--plant-datapath",
-        type=str,
-        default=None,
-        help="Path for plant prompts. If None, samples the original database."
-    )
+    parser.add_argument("--plant-datapath",type=str,default=None,help="Path for plant prompts. If None, samples the original database.")
 
     # language setup grid
-    parser.add_argument(
-        "--lang-setup-grid-path",
-        type=str,
-        default=None,
-        help="Path to CSV file containing language setup grid. If provided, overrides individual language arguments"
-    )
+    parser.add_argument("--lang-setup-grid-path",type=str,default=None,help="Path to CSV file containing language setup grid. If provided, overrides individual language arguments")
 
-    parser.add_argument(
-        "--check-for-filename",
-        action="store_true",
-        help="Whether to check for existing save path filename before running experiment"
-    )
+    parser.add_argument("--check-for-filename",action="store_true",help="Whether to check for existing save path filename before running experiment")
 
     args = vars(parser.parse_args())
     return args
@@ -314,7 +196,6 @@ def run_experiment_with_args(
     print(prompts_plant[0])
     print()
 
-
     data = []
     data_topk = []
     for row_i, row in tqdm(dataset_base.df.iterrows()):
@@ -350,13 +231,174 @@ def run_experiment_with_args(
             data=data,
             data_topk=data_topk,
             write_down_top_k=5,
+            include_base_output=True,
         )
+    
+    # Collect clean probabilities for all sentences and token types, and add to data list
+    # for row_i, row in tqdm(dataset_base.df.iterrows()):
+    #     prompt_base = tokenizer(prompts_base[row_i], return_tensors="pt").to(device)
+    #     prompt_plant = tokenizer(prompts_plant[row_i], return_tensors="pt").to(device)
+
+    #     data = collect_clean_probs(
+    #         model,
+    #         tokenizer,
+    #         prompt_base,
+    #         tokentype2token,
+    #         sentence_index=row_i,
+    #         data=data,
+    #     )
 
     df_probs = pd.DataFrame(data)
+    # Convert to int
+    df_probs['layer'] = df_probs['layer'].astype("Int64") # allows for NA values
+    df_probs['head_id'] = df_probs['head_id'].astype("Int64")
+
     df_probs.to_csv(save_path)
 
     df_topk = pd.DataFrame(data_topk)
     df_topk.to_csv(os.path.splitext(save_path)[0] + "_topk.csv")
+
+def collect_clean_probs(
+    model,
+    tokenizer,
+    prompt,
+    tokentype2token,
+    sentence_index,
+    data_clean,
+):
+    """Collect token probabilities from a clean (non-intervened) forward pass."""
+    with torch.no_grad():
+        output = model(**prompt)
+        logits = output.logits[0, -1, :]
+        probs = F.softmax(logits, dim=-1)
+
+    row = {"sentence_id": sentence_index}
+    for token_type, token in tokentype2token.items():
+        token_ids = tokenizer.encode(token, add_special_tokens=False)
+        row[f"prob_clean_{token_type}"] = probs[token_ids[0]].item()
+
+    data_clean.append(row)
+    return data_clean
+
+
+def run_clean_pass_and_append(args, src_lang_base, tgt_lang_base, src_lang_plant, tgt_lang_plant, save_path):
+    """Run clean forward passes and append results as new rows to existing CSV."""
+    if not os.path.exists(save_path):
+        print(f"File {save_path} not found, skipping: {save_path}")
+        return
+
+    model_id = args["model_id"]
+    datapath = args["datapath"]
+    cache_dir = args["cache_dir"]
+    sample_size = args["sample_size"]
+    pos_prefixes = args["pos_prefixes"]
+    oneshot_template = args["oneshot_template"]
+    last_template = args["last_template"]
+    num_shots = args["num_shots"]
+    start_with_space_base = args["start_with_space_base"]
+    start_with_space_plant = args["start_with_space_plant"]
+    shot_data_src_prefix = args["shot_data_src_prefix"]
+    shot_data_tgt_prefix = args["shot_data_tgt_prefix"]
+    sentence_src_prefix = args["sentences_src_prefix"]
+    sentence_tgt_prefix = args["sentences_tgt_prefix"]
+    plant_datapath = args["plant_datapath"]
+
+    login(args["hf_token"])
+    device = torch.device(
+        "mps" if torch.backends.mps.is_available() else "cuda" if torch.cuda.is_available() else "cpu"
+    )
+
+    df = pd.read_csv(datapath)
+    df_base = df.sample(n=sample_size, random_state=42).reset_index(drop=True)
+
+    if plant_datapath is not None:
+        df_plant = pd.read_csv(plant_datapath)
+        df_plant = df_plant.sample(n=sample_size, random_state=43).reset_index(drop=True)
+    else:
+        df_plant = df_base.sample(n=sample_size, random_state=42).reset_index(drop=True)
+
+    model = AutoModelForCausalLM.from_pretrained(model_id, cache_dir=cache_dir, attn_implementation="eager").to(device)
+    tokenizer = AutoTokenizer.from_pretrained(model_id, cache_dir=cache_dir)
+
+    dataset_base, prompts_base = create_parallel_dataset(
+        model_id, df=df_base,
+        src_lang=src_lang_base, tgt_lang=tgt_lang_base,
+        sentences_src_prefix=sentence_src_prefix,
+        sentences_tgt_prefix=sentence_tgt_prefix,
+        oneshot_template=oneshot_template,
+        last_prompt_template=last_template,
+        shot_data_src_prefix=shot_data_src_prefix,
+        shot_data_tgt_prefix=shot_data_tgt_prefix,
+        num_shots=num_shots, sample_size=sample_size, random_seed=42,
+        return_prompts=True,
+    )
+
+    dataset_plant, prompts_plant = create_parallel_dataset(
+        model_id, df=df_plant,
+        src_lang=src_lang_plant, tgt_lang=tgt_lang_plant,
+        sentences_src_prefix=sentence_src_prefix,
+        sentences_tgt_prefix=sentence_tgt_prefix,
+        oneshot_template=oneshot_template,
+        last_prompt_template=last_template,
+        shot_data_src_prefix=shot_data_src_prefix,
+        shot_data_tgt_prefix=shot_data_tgt_prefix,
+        num_shots=num_shots, sample_size=sample_size, random_seed=42,
+        return_prompts=True,
+    )
+
+    df_existing = pd.read_csv(save_path)
+
+    # Check if clean rows already exist
+    if "clean" in df_existing["type"].values:
+        print(f"Clean rows already exist in {save_path}, skipping.")
+        return
+
+    # Use one existing row as a template to infer which columns and values are fixed per sentence
+    template_cols = [c for c in df_existing.columns if c not in ("Unnamed: 0", "prob", "layer", "token", "token_type")]
+
+    data_clean = []
+    for row_i, _ in tqdm(dataset_base.df.iterrows()):
+        prompt_base  = tokenizer(prompts_base[row_i],  return_tensors="pt").to(device)
+        prompt_plant = tokenizer(prompts_plant[row_i], return_tensors="pt").to(device)
+
+        tokentype2token = get_token2tokentype(
+            tokenizer, row_i, df_base, df_plant,
+            lang_base=tgt_lang_base, lang_plant=tgt_lang_plant,
+            pos_prefixes=pos_prefixes,
+            start_with_space_base=start_with_space_base,
+            start_with_space_plant=start_with_space_plant,
+        )
+
+        # Get the metadata for this sentence from the existing CSV to fill non-prob columns
+        sentence_rows = df_existing[df_existing["sentence_id"] == row_i]
+
+        with torch.no_grad():
+            output = model(**prompt_base)
+            logits = output.logits[0, -1, :]
+            probs = F.softmax(logits, dim=-1)
+
+        for token_type, token in tokentype2token.items():
+            token_ids = tokenizer.encode(token, add_special_tokens=False)
+            prob = probs[token_ids[0]].item()
+
+            # Copy metadata from a matching existing row for this token_type
+            matching = sentence_rows[sentence_rows["token_type"] == token_type]
+            if len(matching) == 0:
+                continue
+            meta = matching.iloc[0]
+
+            row = {col: meta[col] for col in template_cols if col in meta.index}
+            row["token_type"] = token_type
+            row["token"] = token
+            row["prob"] = prob
+            row["layer"] = None  # signals clean run
+            row["type"] = "clean"
+            data_clean.append(row)
+
+    df_clean = pd.DataFrame(data_clean)
+    df_out = pd.concat([df_existing, df_clean], ignore_index=True)
+    df_out.to_csv(save_path, index=False)
+    print(f"Appended {len(df_clean)} clean rows to {save_path}")
 
 def run_experiment():
     args = get_args()
@@ -375,6 +417,7 @@ def run_experiment():
             save_path = args["save_path"].format(src_lang_base=src_lang_base, tgt_lang_base=tgt_lang_base, src_lang_plant=src_lang_plant, tgt_lang_plant=tgt_lang_plant)
             print(f"Running language setup {lang_setup_i}: {src_lang_base}-{tgt_lang_base} (Base) and {src_lang_plant}-{tgt_lang_plant} (Plant)")
             run_experiment_with_args(args, src_lang_base, tgt_lang_base, src_lang_plant, tgt_lang_plant, save_path=save_path)
+            # run_clean_pass_and_append(args, src_lang_base, tgt_lang_base, src_lang_plant, tgt_lang_plant, save_path=save_path)
     else:
         src_lang_base = args["src_lang_base"]
         tgt_lang_base = args["tgt_lang_base"]
@@ -383,6 +426,7 @@ def run_experiment():
         save_path = args["save_path"]
         print(f"Running language setup {lang_setup_i}: {src_lang_base}-{tgt_lang_base} (Base) and {src_lang_plant}-{tgt_lang_plant} (Plant)")
         run_experiment_with_args(args, src_lang_base, tgt_lang_base, src_lang_plant, tgt_lang_plant, save_path=save_path)
+        # run_clean_pass_and_append(args, src_lang_base, tgt_lang_base, src_lang_plant, tgt_lang_plant, save_path=save_path)
 
 def main():
     run_experiment()
