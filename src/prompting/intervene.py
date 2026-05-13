@@ -41,6 +41,8 @@ def intervene(
         component_type,
         layer_i,
         head_i = None,
+        output_hidden_states = False,
+        return_base_output = False
 ):
     if component_type in ["block_output", "mlp_output", "attention_value_output"]:
         unit = "pos"
@@ -61,11 +63,16 @@ def intervene(
         }
     else:
         unit_locations = {"sources->base": (source_pos, base_pos)}
-    _, counterfactual_outputs = intervenable(
+    if output_hidden_states:
+        base = {**base, "output_hidden_states": True}
+    base_output, counterfactual_outputs = intervenable(
         base,
         source,
         unit_locations,
+        output_original_output=True
     )
+    if return_base_output:
+        return base_output, counterfactual_outputs
     return counterfactual_outputs
 
 def intervention_data(
@@ -85,6 +92,7 @@ def intervention_data(
         write_down_top_k: int = 5,
         lang2s: Optional[Dict[str, Dict[str, str]]] = None,
         base_plant_langs: Optional[List[str]] = None,
+        include_base_output: bool = False,
     ) -> List[Dict[str, Any]]:
     """
     Collect intervention data for a given model component (block output or head attention value output).
@@ -139,7 +147,12 @@ def intervention_data(
         layers = list(range(num_layers))
 
     for layer_i in layers:
-        outputs = intervene(model, base, source, base_pos, source_pos, component_type=component_type, layer_i=layer_i, head_i=head_i)
+        if include_base_output and layer_i == 0:
+            base_outputs, outputs = intervene(model, base, source, base_pos, source_pos, component_type=component_type, layer_i=layer_i, head_i=head_i, return_base_output=True)
+            with torch.inference_mode():
+                base_distrib = sm(base_outputs.logits)
+        else:
+            outputs = intervene(model, base, source, base_pos, source_pos, component_type=component_type, layer_i=layer_i, head_i=head_i)
         with torch.inference_mode():
             distrib = sm(outputs.logits)
         # print("DISTRIB SHAPE:", distrib.shape)
@@ -176,8 +189,24 @@ def intervention_data(
                 )
             except Exception as e:
                 print(f"Error processing token '{token}' of type '{token_type}' in sentence id {sentence_index}: {e}")
-            # print(token_type, token, tokenizer.encode(token, add_special_tokens=False)[0], tokenizer.convert_ids_to_tokens(tokenizer.encode(token, add_special_tokens=False)[0]))
                 continue
+            if include_base_output and (layer_i == 0):
+                data.append(
+                    {
+                        "sentence_id": sentence_index,
+                        "token_type": token_type,
+                        "token": token,
+                        "prob": float(base_distrib[0][base_pos][tokenizer.encode(token, add_special_tokens=False)[0],]),
+                        "layer": None,
+                        "head_id": None,
+                        "pos": base_pos,
+                        "type": "clean",
+                        "part_of_speech": part_of_speech,
+                        "language": language,
+                        "lexical_component": lexical_component,
+                    }
+                )
+            # print(token_type, token, tokenizer.encode(token, add_special_tokens=False)[0], tokenizer.convert_ids_to_tokens(tokenizer.encode(token, add_special_tokens=False)[0]))
 
     if write_down_top_k:
         return data, data_topk
